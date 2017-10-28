@@ -13,6 +13,8 @@ var mongoSessionURL = "mongodb://localhost:27017/sessions";
 var expressSessions = require("express-session");
 var mongoStore = require("connect-mongo/es5")(expressSessions);
 
+var kafka = require('./routes/kafka/client');
+
 var app = express();
 
 // view engine setup
@@ -49,27 +51,56 @@ app.use(passport.initialize());
 app.use('/', routes);
 app.use('/users', users);
 
-app.post('/logout', function(req,res) {
-    console.log(req.session.user);
+app.post('/signout', function(req,res) {
+    console.log(req.session.userid);
     req.session.destroy();
     console.log('Session Destroyed');
-    res.status(200).send();
+    res.json({status:'201'});
 });
 
-app.post('/login', function(req, res) {
-    passport.authenticate('login', function(err, user) {
+app.post('/signin', function(req, res) {
+    console.log('hello from'+req.body.username);
+    passport.authenticate('login', function(err, data) {
         if(err) {
             res.status(500).send();
         }
-
-        if(!user) {
-            res.status(401).send();
-        }
-        req.session.user = user.username;
-        console.log(req.session.user);
-        console.log("session initilized");
-        return res.status(201).send({username:"test"});
+        else{
+            console.log(data);
+            if(data.status==='201'){
+                req.session.userid = data.id;
+                console.log(req.session.userid+' '+data.id);
+                console.log("session initilized");
+                res.json(data);
+            }
+            else{
+                res.json(data);
+            }
+            
+        }      
     })(req, res);
+});
+
+app.post('/signup', function(req,res){
+    console.log(' the other side'+req.body.email+req.body.firstname+req.body.lastname+req.body.password);
+
+    var payload = {
+        email: req.body.email,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        password: req.body.password
+    };
+
+    kafka.make_request('signup_topic',payload, function(err,data){
+            console.log(data.status);
+            console.log(data);
+            if(err){
+                res.json(err);
+            }
+            else
+            {
+                res.json(data);
+            }
+        });
 });
 
 module.exports = app;

@@ -10,7 +10,7 @@ class NavigationFile extends Component{
 
             <div className="col-md-9">
                 <div className="row" style={istyle}>
-                    <NavLink to="/home" style={hlstyle} activeStyle={{ color: '#0070E0' }}>
+                    <NavLink to="/" style={hlstyle} activeStyle={{ color: '#0070E0' }}>
                     <img id="icon" style={logoStyle} alt="logo.svg" src="https://cfl.dropboxstatic.com/static/images/index/rebrand/logos/glyphs/glyph_blue.svg"/>
                     </NavLink>
                     

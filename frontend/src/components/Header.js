@@ -5,6 +5,7 @@ import IconButton from 'material-ui/IconButton';
 import {removeUserInfo,resetState} from '../actions/action.js';
 import {connect} from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import * as API from '../api/api';
 
 class Header extends Component{
 
@@ -24,8 +25,13 @@ class Header extends Component{
                 </IconButton>
                 <IconButton onClick={()=>{
                     this.props.removeUserInfo();
-                    //this.props.resetState();
-                    this.props.history.push('/');
+                    API.doSignout()
+                    .then((data)=>{
+                        if(data.status==='201'){
+                            localStorage.clear();
+                            this.props.history.push('/login');
+                        }
+                    });    
                 }
                 }>
                     <ExitIcon/>

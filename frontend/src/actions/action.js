@@ -1,4 +1,4 @@
-import CryptoJS from 'crypto-js';
+//import CryptoJS from 'crypto-js';
 export const ADD_LOGIN_INFO = 'ADD_LOGIN_INFO';
 export const ADD_SIGNUP_INFO = 'ADD_SIGNUP_INFO';
 export const REMOVE_LOGIN_INFO = 'REMOVE_LOGIN_INFO';
@@ -7,9 +7,11 @@ export const ADD_USER_INFO = 'ADD_USER_INFO';
 export const REMOVE_USER_INFO = 'REMOVE_USER_INFO';
 export const ADD_FILE_LIST = "ADD_FILE_LIST";
 export const RESET_STATE = 'RESET_STATE';
+
 export function addLoginInfo(email,password){
-    var h=CryptoJS.AES.encrypt(password,"key");
+    //var h=CryptoJS.AES.encrypt(password,"key");
     //console.log(CryptoJS.AES.decrypt(h.toString()),"key");
+    console.log(email+' '+password);
     return {
         type : ADD_LOGIN_INFO,
         email,

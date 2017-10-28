@@ -7,7 +7,7 @@ import { Provider } from 'react-redux';
 import wholeReducer from './reducers/reducer';
 import { compose, createStore } from 'redux';
 import {persistStore, autoRehydrate} from 'redux-persist';
-import {Route,BrowserRouter,Switch} from 'react-router-dom';
+import {BrowserRouter,Switch} from 'react-router-dom';
 import LoginRegister from './components/LoginRegister';
 import MainPage from './components/MainPage';
 import FilePage from './components/FilePage';
@@ -20,6 +20,7 @@ import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 
 
 const theme = createMuiTheme();
+
 let store = compose(
         autoRehydrate()
     )(createStore)(wholeReducer,window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());

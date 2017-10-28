@@ -6,14 +6,16 @@ import * as API from '../api/api';
 import { withRouter } from 'react-router-dom';
 //import CryptoJS from 'crypto-js';
 import Snackbar from 'material-ui/Snackbar';
-import PropTypes from 'prop-types';
+//import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 
 class Signin extends Component{
 
     state = {
         open:false,
-        msg:''
+        msg:'',
+        username:'',
+        password:''
     }
     
     handleRequestClose = (event, reason) => {
@@ -25,7 +27,7 @@ class Signin extends Component{
     };
 
     render(){
-        const { classes } = this.props;
+        //const { classes } = this.props;
         return(
                 <div style={{margin:'10px'}}>
                     <form className="form-horizontal" action="">
@@ -40,9 +42,9 @@ class Signin extends Component{
                             //value={this.props.login.email} 
                             onChange={(event) => {
                                 this.setState({...this.state,
-                                    email: event.target.value
+                                    username: event.target.value
                                 });
-                                this.props.login.email= event.target.value;
+                                //this.props.login.email= event.target.value;
                             }}>
                         </input>
                         <input 
@@ -58,7 +60,7 @@ class Signin extends Component{
                                 this.setState({...this.state,
                                     password: event.target.value
                                 });
-                                this.props.login.password= event.target.value;
+                                //this.props.login.password= event.target.value;
                             }}>
                         </input>
                         <Button 
@@ -66,43 +68,43 @@ class Signin extends Component{
                             className="btn"
                             style={{marginBottom:'10px', width:'100%'}}
                             onClick={()=>{
-                                if(!validateEmail(this.props.login.email)){
-                                    this.setState({ open: true,msg:'INCORRECT EMAIL FORMAT' });
+                                if(!validateEmail(this.state.username)){
+                                    this.setState({ open: true,msg:'ENTER VALID EMAILID' });
                                 }
-                                else if(this.props.login.password===undefined || this.props.login.password===""){
+                                else if(this.state.password===undefined || this.state.password===""){
                                     this.setState({ open: true,msg:'EMPTY PASSWORD' });
                                 }
                                 else{
                                     this.props.addLoginInfo(
-                                        this.props.login.email,
-                                        this.props.login.password);
-                                    console.log(this.props.login);
-                                    API.doLogin(this.props.login)
+                                        this.state.username,
+                                        this.state.password);
+                                    console.log(this.props);
+                                    API.doLogin(this.state)
                                     .then((data) => {
                                         //console.log(data);
-                                        if(data.success==="1"){
-                                            this.props.addUserInfo(data.email,data.firstname,data.userid,data.curdir);
-                                            this.props.history.push('/home');
+                                        if(data.status==="201"){
+                                            this.props.addUserInfo(data.email,data.firstname,data.id,data.curdir);
+                                            this.props.history.push('/');
                                             console.log(this.props);
                                         }
-                                        else if(data.success==='2'){
-                                            this.setState({ open: true,msg:'User not found' });
+                                        else if(data.status==='202'){
+                                            this.setState({ open: true,msg:data.message });
                                         }
-                                        else if(data.success==='3'){
-                                            this.setState({ open: true,msg:'Wrong password' });
+                                        else if(data.status==='203'){
+                                            this.setState({ open: true,msg:data.message });
                                         }
                                         else{
                                             this.setState({ open: true,msg:'Try again' });
                                         }
                                     });    
                                 }
-                                this.props.removeLoginInfo();
-                                this.props.history.push('/');
+                                //this.props.removeLoginInfo();
+                                //this.props.history.push('/');
                             }}
                             >Sign in</Button>
                             <Snackbar
                                 anchorOrigin={{
-                                    vertical: 'top',
+                                    vertical: 'bottom',
                                     horizontal: 'right',
                                 }}
                                 open={this.state.open}
@@ -111,7 +113,7 @@ class Signin extends Component{
                                 SnackbarContentProps={{
                                     'aria-describedby': 'message-id',
                                 }}
-                                message={<span id="message-id">{this.state.msg}</span>}
+                                message={<span style={{textSize:'20px'}} id="message-id">{this.state.msg}</span>}
                             /> 
                     </form>
                 </div>  
@@ -120,9 +122,9 @@ class Signin extends Component{
     
 }
 
-Signin.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
+// Signin.propTypes = {
+//     classes: PropTypes.object.isRequired,
+// };
 
 const styles = theme => ({
     close: {

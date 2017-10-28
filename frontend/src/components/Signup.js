@@ -5,14 +5,18 @@ import {connect} from 'react-redux';
 import * as API from '../api/api';
 import { withRouter } from 'react-router-dom';
 import Snackbar from 'material-ui/Snackbar';
-import PropTypes from 'prop-types';
+//import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 
 class Signup extends Component{
 
     state = {
         open:false,
-        msg:''
+        msg:'',
+        email:'',
+        firstname:'',
+        lastname:'',
+        password:''
     }
     
     handleRequestClose = (event, reason) => {
@@ -24,10 +28,42 @@ class Signup extends Component{
     };
 
     render(){
-        const { classes } = this.props;
+        //const { classes } = this.props;
         return(
             <div style={{margin:'10px'}}>
                 <form className="form-horizontal" action="">
+                    <input 
+                        type="text" 
+                        className="form-control" 
+                        name="inputFirstname" 
+                        id="inputFirstname" 
+                        placeholder="First Name" 
+                        required="required"
+                        style={{marginBottom:'10px'}}
+                        //value={this.props.first}
+                        onChange={(event)=>{
+                            this.setState({...this.state,
+                                firstname:event.target.value
+                            });
+                            //this.props.register.firstname=event.target.value;
+                        }}
+                    ></input>
+                    <input 
+                        type="text" 
+                        className="form-control" 
+                        name="inputLastname" 
+                        id="inputLastname" 
+                        placeholder="Last Name" 
+                        required="required"
+                        style={{marginBottom:'10px'}}
+                        //value={this.props.last}
+                        onChange={(event)=>{
+                            this.setState({...this.state,
+                                lastname:event.target.value
+                            });
+                            //this.props.register.lastname=event.target.value;
+                        }}
+                    ></input>
                     <input 
                         type="email" 
                         className="form-control" 
@@ -41,41 +77,9 @@ class Signup extends Component{
                             this.setState({...this.state,
                                 email:event.target.value
                             });
-                            this.props.register.email=event.target.value;
+                            //this.props.register.email=event.target.value;
                         }}
-                        ></input>
-                    <input 
-                        type="text" 
-                        className="form-control" 
-                        name="inputFirstname" 
-                        id="inputFirstname" 
-                        placeholder="First Name" 
-                        required="required"
-                        style={{marginBottom:'10px'}}
-                        //value={this.props.first}
-                        onChange={(event)=>{
-                            this.setState({...this.state,
-                                first:event.target.value
-                            });
-                            this.props.register.firstname=event.target.value;
-                        }}
-                        ></input>
-                    <input 
-                        type="text" 
-                        className="form-control" 
-                        name="inputLastname" 
-                        id="inputLastname" 
-                        placeholder="Last Name" 
-                        required="required"
-                        style={{marginBottom:'10px'}}
-                        //value={this.props.last}
-                        onChange={(event)=>{
-                            this.setState({...this.state,
-                                last:event.target.value
-                            });
-                            this.props.register.lastname=event.target.value;
-                        }}
-                        ></input>
+                    ></input>
                     <input 
                         type="password" 
                         className="form-control" 
@@ -89,52 +93,52 @@ class Signup extends Component{
                             this.setState({...this.state,
                                 password:event.target.value
                             });
-                            this.props.register.password=event.target.value;
+                            //this.props.register.password=event.target.value;
                         }}
-                        ></input>
+                    ></input>
                     <Button 
                     raised 
                     className="btn"
                     style={{marginBottom:'10px', width:'100%'}}
                     onClick={() => {
-                        if(!validateEmail(this.props.register.email)){
-                            this.setState({ open: true,msg:'INCORRECT EMAIL FORMAT' });
+                        if(!validateEmail(this.state.email)){
+                            this.setState({ open: true,msg:'ENTER VALID EMAILID' });
                         }
-                        else if(this.props.register.password===undefined ||this.props.register.password==="" ||
-                            this.props.register.firstname===undefined || this.props.register.firstname==="" ||
-                            this.props.register.lastname===undefined  || this.props.register.lastname===""                      
+                        else if(this.state.password==='' ||
+                            this.state.firstname==='' ||
+                            this.state.lastname===''                      
                         ){
                             console.log(this.props.register);
                             this.setState({ open: true,msg:'EMPTY FIELDS' });
                         }
                         else{
                             this.props.addSignupInfo(
-                                this.props.register.email,
-                                this.props.register.password,
-                                this.props.register.firstname,
-                                this.props.register.lastname);
-                            //console.log(this.props.register);
-                            API.doSignup(this.props.register)
+                                this.state.email,
+                                this.state.password,
+                                this.state.firstname,
+                                this.state.lastname);
+                            console.log(this.props.register);
+                            API.doSignup(this.state)
                             .then((data) => {
-                                console.log(data);
-                                if(data.success==="1"){
-                                    this.props.addUserInfo(data.email,data.first,data.userid,data.curdir);
-                                    this.props.history.push('/home');
+                                //console.log(data);
+                                if(data.status==="201"){
+                                    //this.props.addUserInfo(data.email,data.firstname,data.userid,data.curdir);
+                                    
+                                    this.setState({ open: true, msg: data.message });
                                     this.props.removeSignupInfo();
+                                    window.location.reload();
+                                    this.props.history.push('/login');
                                 }
-                                else if(data.success==='2'){
-                                    this.setState({ open: true,msg:'User already exists' });
-                                }
-                                else if(data.success==='3'){
-                                    this.setState({ open: true,msg:'Wrong password' });
+                                else if(data.status==='202'){
+                                    this.setState({ open: true, msg: data.message });
                                 }
                                 else{
-                                    this.setState({ open: true,msg:'Try again' });
+                                    this.setState({ open: true,msg:'TRY AGAIN' });
                                 }
                             });
                         }
                         this.props.removeSignupInfo();
-                        this.props.history.push('/');
+                        //this.props.history.push('/');
                     }}
                     >Sign Up</Button>
                     <Snackbar
@@ -157,9 +161,9 @@ class Signup extends Component{
     
 }
 
-Signup.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
+// Signup.propTypes = {
+//     classes: PropTypes.object.isRequired,
+// };
 
 const styles = theme => ({
     close: {

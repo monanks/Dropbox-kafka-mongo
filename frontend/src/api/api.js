@@ -9,8 +9,9 @@ export const doLogin = (payload) =>
         method: 'POST',
         headers: {
             ...headers,
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         },
+        credentials:'include',
         body: JSON.stringify(payload)
     }).then(res => {
         return res.json();
@@ -27,6 +28,22 @@ fetch(`${api}/signup`, {
         'Content-Type': 'application/json'
     },
     body: JSON.stringify(payload)
+}).then(res => {
+    console.log(payload);
+    return res.json();
+}).catch(error => {
+        console.log("This is error");
+        return error;
+});
+
+export const doSignout = () =>
+fetch(`${api}/signout`, {
+    method: 'POST',
+    headers: {
+        ...headers,
+        'Content-Type': 'application/json',
+    },
+    credentials:'include'
 }).then(res => {
     return res.json();
 }).catch(error => {
@@ -93,3 +110,4 @@ fetch(`${api}/deleteFile`, {
         console.log(error);
         return error;
 });
+

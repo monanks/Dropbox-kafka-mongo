@@ -10,7 +10,7 @@ class UnAuthorizedRoute extends Component {
         <Route {...rest} render={props => {
           return !(this.props.afterAuth.isLoggedin)
             ? <Component {...this.props} />
-            : <Redirect to="/home" />
+            : <Redirect to="/" />
         }} />
       )
     }
