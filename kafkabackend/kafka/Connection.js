@@ -2,7 +2,7 @@ var kafka = require('kafka-node');
 
 function ConnectionProvider() {
     this.getConsumer = function(topic_name) {
-        console.log('hello'+topic_name);
+        console.log('I am listening to '+topic_name);
         // if (!this.kafkaConsumerConnection) {
 
         //     this.client = new kafka.Client("localhost:2181");

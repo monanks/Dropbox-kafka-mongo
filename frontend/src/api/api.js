@@ -52,8 +52,9 @@ fetch(`${api}/signout`, {
 });
 
 export const uploadFile = (payload) =>
-    fetch(`${api}/upload/doUpload`, {
+    fetch(`${api}/doupload`, {
         method: 'POST',
+        credentials:'include',
         body: payload
     }).then(res => {
         return res;

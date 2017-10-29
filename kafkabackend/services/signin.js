@@ -1,9 +1,9 @@
-var mongo = require("./mongo");
+var mongo = require("../utils/mongo");
 var mongoURL = "mongodb://localhost:27017/dropbox";
 
 function handle_request(msg, callback){
 
-    console.log("In handle request:"+ JSON.stringify(msg));
+    console.log("In handle request: "+ JSON.stringify(msg));
 
     mongo.connect(mongoURL,function(){
         console.log('connected to mongo');

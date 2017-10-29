@@ -12,6 +12,7 @@ var users = require('./routes/users');
 var mongoSessionURL = "mongodb://localhost:27017/sessions";
 var expressSessions = require("express-session");
 var mongoStore = require("connect-mongo/es5")(expressSessions);
+const fileUpload = require('express-fileupload');
 
 var kafka = require('./routes/kafka/client');
 
@@ -47,6 +48,7 @@ app.use(expressSessions({
     })
 }));
 app.use(passport.initialize());
+app.use(fileUpload());
 
 app.use('/', routes);
 app.use('/users', users);
@@ -101,6 +103,50 @@ app.post('/signup', function(req,res){
                 res.json(data);
             }
         });
+});
+
+app.post('/doupload', function(req,res){
+    console.log(req.files.file);
+    
+
+    if(!req.files){
+        res.json({status:'202',message:'FILE NOT UPLOADED'});
+    }
+
+    var payload = {
+        userid: req.body.userid,
+        curdir: req.body.curdir,
+        file: req.files.file
+    }
+
+    kafka.make_request('upload_topic',payload,function(err,data){
+        console.log(data.status);
+            console.log(data);
+            if(err){
+                res.json(err);
+            }
+            else
+            {
+                res.json(data);
+            }
+    });
+    //console.log(req.body.curdir+'curdir');
+    // console.log(req.body.userid+'userid');
+    // console.log(JSON.stringify(req.files.file)+'file');
+
+    // let samplefile = req.files.file;
+
+    // console.log(samplefile.mv);
+
+    // samplefile.mv('./hello.jpg',function(err){
+    //     if(err){
+    //         console.log(err);
+    //     }
+    //     else{
+    //         console.log('hello');
+    //     }
+    // });
+    //res.json();
 });
 
 module.exports = app;

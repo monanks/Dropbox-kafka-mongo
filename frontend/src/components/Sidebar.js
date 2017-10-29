@@ -12,26 +12,30 @@ class Sidebar extends Component{
         return(
             <div>
                 <div className="row">
-                    <label htmlFor="file-upload" style={cfu}>
+                    <label htmlFor="ufile" style={cfu}>
                         <i className="fa fa-cloud-upload" style={{backgroundColor:"#0070e0"}}></i> Upload File
                     </label>
-                    <input id="file-upload" type="file" style={{display:'none'}} onChange={(event)=>{
+                    <input id="ufile" name='ufile' type="file" style={{display:'none'}} onChange={(event)=>{
                         const payload = new FormData();
-                        //console.log(this.props.afterAuth.userid);
+                        console.log(this.props.afterAuth.userid);
                         payload.append("file", event.target.files[0]);
                         payload.append("curdir", this.props.afterAuth.curdir);
-                        payload.append("ownerid", this.props.afterAuth.userid);
+                        payload.append("userid", this.props.afterAuth.userid);
                         console.log(payload);
+                        console.log(event.target.files[0]);
                         API.uploadFile(payload)
                             .then((data) => {
                                 console.log(data);
-                                        if (data.success === '0') {
-                                            
-                                        }
+                                if (data.status === '201') {
+                                    
                                 }
-                            );
-                        }
-                    } />
+                                else{
+                                    
+                                }
+                            }
+                        );
+                    }} />
+
                 </div>
                 <div className="row">
                     

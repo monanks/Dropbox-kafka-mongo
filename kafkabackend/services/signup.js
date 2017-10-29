@@ -1,4 +1,4 @@
-var mongo = require("./mongo");
+var mongo = require("../utils/mongo");
 var mongoURL = "mongodb://localhost:27017/dropbox";
 var fs = require('fs');
 
