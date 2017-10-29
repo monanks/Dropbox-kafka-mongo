@@ -2,6 +2,8 @@ var connection =  new require('./kafka/Connection');
 var signin = require('./services/signin');
 var signup = require('./services/signup');
 var upload = require('./services/upload');
+var listfd = require('./services/listfd');
+var filedownload = require('./services/filedownload');
 
 var producer = connection.getProducer();
 
@@ -84,4 +86,54 @@ consumer2.on('message', function (message) {
     });
 });
 
+var topic_name3 = 'list_topic';
+var consumer3 = connection.getConsumer(topic_name3);
 
+console.log('server3 is running');
+consumer3.on('message', function (message) {
+    console.log('\nmessage received at '+topic_name3);
+    //console.log(JSON.stringify(message.value));
+    var data = JSON.parse(message.value);
+    listfd.handle_request(data.data, function(err,res){
+        console.log('after handle'+res);
+        var payloads = [
+            { topic: data.replyTo,
+                messages:JSON.stringify({
+                    correlationId:data.correlationId,
+                    data : res
+                }),
+                partition : 0
+            }
+        ];
+        producer.send(payloads, function(err, data){
+            console.log(data);
+        });
+        return;
+    });
+});
+
+var topic_name4 = 'download_topic';
+var consumer4 = connection.getConsumer(topic_name4);
+
+console.log('server4 is running');
+consumer4.on('message', function (message) {
+    console.log('\nmessage received at '+topic_name4);
+    //console.log(JSON.stringify(message.value));
+    var data = JSON.parse(message.value);
+    filedownload.handle_request(data.data, function(err,res){
+        console.log('after handle'+res);
+        var payloads = [
+            { topic: data.replyTo,
+                messages:JSON.stringify({
+                    correlationId:data.correlationId,
+                    data : res
+                }),
+                partition : 0
+            }
+        ];
+        producer.send(payloads, function(err, data){
+            console.log(data);
+        });
+        return;
+    });
+});

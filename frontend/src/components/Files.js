@@ -8,6 +8,7 @@ import ListIcon from 'material-ui-icons/FormatListBulleted';
 import List, { ListItem } from 'material-ui/List';
 import DeleteIcon from 'material-ui-icons/Delete';
 import DLIcon from 'material-ui-icons/GetApp';
+var fileDownload = require('js-file-download');
 //import IconButton from 'material-ui/IconButton';
 class Files extends Component{
 
@@ -20,9 +21,9 @@ class Files extends Component{
         API.getFiles(this.props.afterAuth)
             .then((data) => {
                 //console.log(data);
-                if(data.success==="1"){
-                    this.props.addFileList(data.files);
-                    this.state=data.files;
+                if(data.status==="201"){
+                    this.props.addFileList(data.data);
+                    //this.state=data.files;
                 }
                 else{
 
@@ -35,42 +36,44 @@ class Files extends Component{
             const var1 = this.props.file.list;
             console.log(var1);
             return var1.map(item=>(
-                <div>
+                <div >
                     <ListItem >
                         <div className="row" style={lstyle}>
                             <div className="col-md-1">
-                                {item.filetype?<FileIcon/>:<FolderIcon/>}
+                                {item.filetype?<FileIcon style={{width:'60%',height:'60%'}}/>:<FolderIcon style={{width:'60%',height:'60%'}}/>}
                             </div>
                             <div className="col-md-4" style={{overflow: 'hidden',textOverflow: 'ellipsis'}}>
                                 {item.filename}
                             </div>
                             
                             <div className="col-md-3">
-                                {item.datetime.substring(0,10)}
+                                {/* {item.datetime} */}
+                                {item.datetime.substring(0,16)}
                             </div>
                             <div className="col-md-2">
                                 
                             </div>
                             <div className="col-md-1">
-                                <DLIcon onClick={()=>{
+                                <DLIcon style={{width:'60%',height:'60%'}} onClick={()=>{
                                     console.log(item.fileid);
-                                    API.dlFile({fileid: item.fileid})
+                                    API.dlFile({fileid: item.fileid,filepath:item.path})
                                     .then((data)=>{
-
+                                        console.log(Buffer.from(data.data));
+                                        fileDownload(Buffer.from(data.data),item.filename);
                                     })
                                 }
                                 }/>
                             </div>
                             <div className="col-md-1">
                                 {/* <IconButton id={item.fileid} onclick={()=>{console.log('click')}}><DeleteIcon/></IconButton> */}
-                                <DeleteIcon onClick={()=>{
+                                <DeleteIcon style={{marginTop:'-2px',width:'60%',height:'60%'}} onClick={()=>{
                                     console.log(item.fileid);
                                     API.deleteFile({fileid: item.fileid})
                                     .then((data)=>{
                                         this.getFiles();
                                     })
                                 }
-                                }/>
+                                } onFocus={()=>{console.log("hovering")}}/>
                             </div>
                         </div>
                     </ListItem>
@@ -85,7 +88,7 @@ class Files extends Component{
             <div className="row" >
                 <List>
                     <ListItem >
-                        <div className="row" style={lstyle}>
+                        <div className="row" style={hstyle}>
                             <div className="col-md-1">
                             </div>
                             <div className="col-md-4">
@@ -93,7 +96,7 @@ class Files extends Component{
                             </div>
                             
                             <div className="col-md-3">
-                                Upload Date
+                                Uploaded
                             </div>
                             <div className="col-md-2">
                                 
@@ -102,7 +105,7 @@ class Files extends Component{
                                 
                             </div>
                             <div className="col-md-1">
-                                <ListIcon/>
+                                <ListIcon style={{width:'60%',height:'60%'}}/>
                             </div>
                         </div>
                     </ListItem>
@@ -114,9 +117,19 @@ class Files extends Component{
     }
 }
 
+const hstyle = {
+    width: "100%",
+    marginLeft:"0px",
+    fontSize: '10px',
+    fontWeight: '700',
+    color: '#637282'
+} 
 const lstyle = {
     width: "100%",
-    marginLeft: "0px"
+    marginLeft: "0px",
+    fontSize: '13px',
+    fontWeight: '100',
+    color: '#3d464d'
 }
 
 const mapStateToProps= state =>{

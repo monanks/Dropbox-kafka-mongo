@@ -71,6 +71,7 @@ fetch(`${api}/getFiles`, {
         ...headers,
         'Content-Type': 'application/json'
     },
+    credentials:'include',
     body: JSON.stringify(payload)
 }).then(res => {
     return res.json();
@@ -86,11 +87,11 @@ fetch(`${api}/dlFile`, {
         ...headers,
         'Content-Type': 'application/json'
     },
+    credentials:'include',
     body: JSON.stringify(payload)
 }).then(res => {
     console.log(res);
-    //window.open(res.body);
-    return res;
+    return res.json();
 }).catch(error => {
         console.log(error);
         return error;

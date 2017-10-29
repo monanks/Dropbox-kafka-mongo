@@ -106,7 +106,7 @@ app.post('/signup', function(req,res){
 });
 
 app.post('/doupload', function(req,res){
-    console.log(req.files.file);
+    //console.log(req.files.file);
     
 
     if(!req.files){
@@ -147,6 +147,44 @@ app.post('/doupload', function(req,res){
     //     }
     // });
     //res.json();
+});
+
+app.post('/getFiles',function(req,res){
+
+    var payload = {
+        userid: req.body.userid,
+        curdir: req.body.curdir
+    };
+    console.log(payload);
+
+    kafka.make_request('list_topic',payload,function(err,data){
+        console.log(data.status);
+        if(err){
+            res.json(err);
+        }
+        else{
+            res.json(data);
+        }
+    });
+});
+
+app.post('/dlFile',function(req,res){
+
+    var payload = {
+        fileid: req.body.fileid,
+        filepath: req.body.filepath
+    };
+    console.log(payload);
+
+    kafka.make_request('download_topic',payload,function(err,data){
+        console.log(Buffer.from(data.data.data));
+        if(err){
+            res.json(err);
+        }
+        else{
+            res.json(data);
+        }
+    });
 });
 
 module.exports = app;
