@@ -9,7 +9,8 @@ function handle_request(msg,callback) {
 	mongo.connect(mongoURL,function(){
 
 		var coll = mongo.collection('files');
-		coll.find({ownerid:userid,parentid:curdir}).toArray(function(err,files){
+		var mysort = { filetype: -1, datetimeCreated: -1};
+		coll.find({ownerid:userid,parentid:curdir}).sort(mysort).toArray(function(err,files){
 			if (err) throw err;
 			//console.log(files);
 
@@ -17,9 +18,10 @@ function handle_request(msg,callback) {
 				return {
 					fileid: obj._id,
 					filename: obj.name,
-					filetype: '0',
+					filetype: obj.filetype,
 					datetime: obj.datetimeCreated,
-					path: obj.filepath
+					path: obj.filepath,
+					parentid: obj.parentid
 				}
 			});
 
@@ -28,7 +30,7 @@ function handle_request(msg,callback) {
 				data: arr
 			}
 
-			console.log(res);
+			//console.log(res);
 
 			callback(null,res);
 		});

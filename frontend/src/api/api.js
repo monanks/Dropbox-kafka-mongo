@@ -57,7 +57,7 @@ export const uploadFile = (payload) =>
         credentials:'include',
         body: payload
     }).then(res => {
-        return res;
+        return res.json();
     }).catch(error => {
             console.log("This is error");
             return error;
@@ -104,10 +104,28 @@ fetch(`${api}/deleteFile`, {
         ...headers,
         'Content-Type': 'application/json'
     },
+    credentials:'include',
     body: JSON.stringify(payload)
 }).then(res => {
     console.log(res);
-    return res;
+    return res.json();
+}).catch(error => {
+        console.log(error);
+        return error;
+});
+
+export const createFolder = (payload) =>
+fetch(`${api}/createFolder`, {
+    method: 'POST',
+    headers: {
+        ...headers,
+        'Content-Type': 'application/json'
+    },
+    credentials:'include',
+    body: JSON.stringify(payload)
+}).then(res => {
+    console.log(res);
+    return res.json();
 }).catch(error => {
         console.log(error);
         return error;

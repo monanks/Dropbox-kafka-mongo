@@ -20,8 +20,10 @@ function handle_request(msg, callback){
     		name: ufile.name,
     		datetimeCreated: datetime(),
     		shared: '0',
+            filetype: '0',
     		ownerid: userid,
     		parentid: curdir
+            //content:ufile.data.data
     	}
 
     	//console.log(data);

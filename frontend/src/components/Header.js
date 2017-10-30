@@ -44,7 +44,7 @@ class Header extends Component{
 
 const boxstyle={
     marginTop: "30px",
-    marginLeft: "20px"
+    marginLeft: "0px"
 }
 
 const hstyle={

@@ -7,6 +7,29 @@ export const ADD_USER_INFO = 'ADD_USER_INFO';
 export const REMOVE_USER_INFO = 'REMOVE_USER_INFO';
 export const ADD_FILE_LIST = "ADD_FILE_LIST";
 export const RESET_STATE = 'RESET_STATE';
+export const CREATE_FOLDER = 'CREATE_FOLDER';
+export const CLOSE_FOLDER = 'CLOSE_FOLDER';
+export const CHANGE_CURDIR = 'CHANGE_CURDIR';
+
+export function changeCurdir(dir,curdir){
+    return{
+        type: CHANGE_CURDIR,
+        dir,
+        curdir 
+    }
+}
+
+export function closeFolder(){
+    return {
+        type: CLOSE_FOLDER
+    }
+}
+
+export function createFolder(){
+    return {
+        type: CREATE_FOLDER
+    }
+}
 
 export function addLoginInfo(email,password){
     //var h=CryptoJS.AES.encrypt(password,"key");
@@ -41,13 +64,14 @@ export function removeSignupInfo(){
     }
 }
 
-export function addUserInfo(email,first,user_id,curdir){
+export function addUserInfo(email,first,user_id,curdir,parentdir){
     return {
         type : ADD_USER_INFO,
         email,
         first,
         user_id,
-        curdir
+        curdir,
+        parentdir
     }
 }
 

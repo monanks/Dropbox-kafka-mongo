@@ -6,10 +6,10 @@ class PageContent extends Component{
     render(){
         return(
             <div>
-                <div className="col-md-9">
+                <div className="col-md-10">
                     <DisplayContent/>                    
                 </div>
-                <div className="col-md-3">
+                <div className="col-md-2">
                     <Sidebar/>
                 </div>
             </div>

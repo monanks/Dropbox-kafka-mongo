@@ -177,7 +177,7 @@ app.post('/dlFile',function(req,res){
     console.log(payload);
 
     kafka.make_request('download_topic',payload,function(err,data){
-        console.log(Buffer.from(data.data.data));
+        //console.log(Buffer.from(data.data.data));
         if(err){
             res.json(err);
         }
@@ -187,4 +187,43 @@ app.post('/dlFile',function(req,res){
     });
 });
 
+app.post('/deleteFile',function(req,res){
+
+    var payload = {
+        fileid: req.body.fileid,
+        filepath: req.body.filepath,
+        filetype: req.body.filetype
+    };
+    console.log(payload);
+
+    kafka.make_request('delete_topic',payload,function(err,data){
+        console.log(data);
+        if(err){
+            res.json(err);
+        }
+        else{
+            res.json(data);
+        }
+    });
+});
+
+app.post('/createFolder',function(req,res){
+
+    var payload = {
+        userid: req.body.userid,
+        curdir: req.body.curdir,
+        foldername: req.body.foldername
+    };
+    console.log(payload);
+
+    kafka.make_request('new_folder_topic',payload,function(err,data){
+        console.log(data);
+        if(err){
+            res.json(err);
+        }
+        else{
+            res.json(data);
+        }
+    });
+});
 module.exports = app;

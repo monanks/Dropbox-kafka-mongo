@@ -1,14 +1,14 @@
 import React,{Component} from 'react';
-//import Button from 'material-ui/Button';
+import Button from 'material-ui/Button';
 //import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 //import SharedFolderIcon from 'material-ui-icons/FolderShared';
-//import FolderIcon from 'material-ui-icons/Folder';
+import FolderIcon from 'material-ui-icons/FolderOpen';
 import * as API from '../api/api.js';
 import {connect} from 'react-redux';
-import {addFileList} from '../actions/action.js';
-//import FileIcon from 'material-ui-icons/InsertDriveFile';
+import {addFileList,createFolder} from '../actions/action.js';
+//mport FileIcon from 'material-ui-icons/InsertDriveFile';
 
-class Sidebar extends Component{
+class FileSidebar extends Component{
 
     getFiles = () => {
         console.log(this.props.afterAuth);
@@ -55,7 +55,13 @@ class Sidebar extends Component{
                     }} />
 
                 </div>
-
+                <div className="row">
+                <Button style={{color:'#0070e0',backgroundColor:'white'}} onClick={()=>{
+                    this.props.createFolder();
+                }}>
+                    <FolderIcon style={{marginRight:'10px'}}/> New Folder
+                </Button>
+                </div>
             </div>
         )
     }
@@ -69,7 +75,7 @@ const cfu={
     paddingLeft: '12px',
     cursor: 'pointer',
     backgroundColor: '#0070e0',
-    marginRight:"0px",
+    margin:"10px",
     width:'100%',
     height:'100%',
     fontColor:'white',
@@ -86,8 +92,9 @@ const mapStateToProps= state =>{
 
 const mapDispatchToProps = dispatch =>{
     return{
-        addFileList: (filelist) =>dispatch(addFileList(filelist))
+        addFileList: (filelist) =>dispatch(addFileList(filelist)),
+        createFolder: () =>dispatch(createFolder())
     }
 }
 
-export default connect(mapStateToProps,mapDispatchToProps) (Sidebar);
+export default connect(mapStateToProps,mapDispatchToProps) (FileSidebar);

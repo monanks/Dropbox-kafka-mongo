@@ -5,7 +5,7 @@ class NavigationHome extends Component{
     render(){
         return(
         <div style={nav}>
-            <div className="col-md-3">
+            <div className="col-md-2">
             </div>
 
             <div className="col-md-9">
@@ -25,6 +25,8 @@ class NavigationHome extends Component{
                     <NavLink to="/group" style={lstyle} activeStyle={{ color: '#0070E0' }}>My Groups</NavLink>
                 </div>
             </div>
+            <div className="col-md-1">
+            </div>
         </div>
         )
     }
@@ -36,21 +38,22 @@ const istyle={
 }
 
 const lstyle={
-    fontSize: '13px',
+    fontSize: '17px',
     lineHeight: '16px',
     color: '#637282',
     display: 'block',
     msFlex: '1',
-    textDecoration: 'none'
+    textDecoration: 'none',
+    fontWeight:'100'
 }
 const linkStyle={
-    marginTop: "17px",
-    marginBottom: "17px"
+    marginTop: "25px",
+    marginBottom: "25px"
 }
 
 const logoStyle={
-    height: "26px",
-    width: "26px"
+    height: "32px",
+    width: "32px"
 }
 
 const nav={

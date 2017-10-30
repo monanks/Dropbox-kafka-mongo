@@ -28,7 +28,8 @@ function handle_request(msg, callback){
                             email: user.email,
                             id: user._id,
                             firstname: user.firstname,
-                            curdir: '0'
+                            curdir: '0',
+                            parentdir:'-1'
                         }
                         callback(null,res);
                     }

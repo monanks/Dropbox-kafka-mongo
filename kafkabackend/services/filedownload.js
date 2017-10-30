@@ -9,8 +9,23 @@ function handle_request(msg, callback){
 
 	var fileid = msg.fileid;
 	var filepath = msg.filepath;
+    console.log(fileid);
 
     console.log(filepath);
+
+    // mongo.connect(mongoURL,function(){
+    //     var coll = mongo.collection('files');
+    //     coll.findOne({filepath:filepath},function(err,result){
+    //         console.log(result);
+    //         if(result){
+    //             var res = {
+    //                 status: '201',
+    //                 data: result.content
+    //             }
+    //             callback(null,res);
+    //         }
+    //     })
+    // });
 
     fs.readFile(filepath,function(err,data){
         if(err) throw err;

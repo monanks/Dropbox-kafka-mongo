@@ -8,7 +8,10 @@ import {
     REMOVE_SIGNUP_INFO,
     ADD_USER_INFO,
     REMOVE_USER_INFO,
-    ADD_FILE_LIST
+    ADD_FILE_LIST,
+    CREATE_FOLDER,
+    CLOSE_FOLDER,
+    CHANGE_CURDIR
 } from '../actions/action';
 
 function login(state={},action){
@@ -58,12 +61,18 @@ function afterAuth(state={name:"",isLoggedin:false},action){
                 name: action.first,
                 userid: action.user_id,
                 isLoggedin: true,
-                curdir: action.curdir
+                curdir: action.curdir,
+                parentdir: action.parentdir
             }
         case REMOVE_USER_INFO:
             return {
                 name:"guest",
                 isLoggedin: false
+            }
+        case CHANGE_CURDIR:
+            return {...state,
+                curdir: action.dir,
+                parentdir: action.curdir
             }
         case 'persist/REHYDRATE':
             var incoming = action.payload.afterAuth;
@@ -89,11 +98,22 @@ function file(state={},action){
     }
 }
 
+function folderstate(state=false,action){
+    switch(action.type){
+        case CREATE_FOLDER:
+            return true;
+        case CLOSE_FOLDER:
+            return false;
+        default:
+            return state;
+    }
+}
 const GreatReducer =  combineReducers({
     login,
     register,
     afterAuth,
-    file    
+    file,
+    folderstate    
 });        
 
 const wholeReducer = composeResetReducer(GreatReducer,{});

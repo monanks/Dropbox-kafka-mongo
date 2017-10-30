@@ -21,7 +21,7 @@ class NavigationFile extends Component{
                 </div>
 
                 <div className="row" style ={linkStyle}>
-                    <NavLink to="/files" style={lstyle} activeStyle={{ color: '#0070E0', fontWeight: 'bold' }}>My Files</NavLink>
+                    <NavLink to="/files" style={lstyle} activeStyle={{ color: '#0070E0', fontWeight: '100' }}>My Files</NavLink>
                 </div>
 
                 <div className="row" style ={linkStyle}>
@@ -31,6 +31,8 @@ class NavigationFile extends Component{
                 <div className="row" style ={linkStyle}>
                     <NavLink to="/files/deleted" style={lstyle} activeStyle={{ color: '#0070E0' }}>Deleted Files</NavLink>
                 </div>
+            </div>
+            <div className="col-md-1">
             </div>
         </div>
         )
@@ -43,7 +45,7 @@ const istyle={
 }
 
 const hlstyle={
-    fontSize: '13px',
+    fontSize: '18px',
     lineHeight: '16px',
     color: 'blue',
     display: 'block',
@@ -51,13 +53,13 @@ const hlstyle={
     textDecoration: 'none'
 }
 const hlinkStyle={
-    marginTop: "17px",
+    marginTop: "25px",
     marginBottom: "30px"
 }
 
 
 const lstyle={
-    fontSize: '13px',
+    fontSize: '15px',
     lineHeight: '16px',
     color: '#637282',
     display: 'block',
@@ -65,13 +67,13 @@ const lstyle={
     textDecoration: 'none'
 }
 const linkStyle={
-    marginTop: "13px",
-    marginBottom: "13px"
+    marginTop: "25px",
+    marginBottom: "25px"
 }
 
 const logoStyle={
-    height: "26px",
-    width: "26px"
+    height: "32px",
+    width: "32px"
 }
 
 const nav={

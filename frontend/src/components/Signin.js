@@ -83,7 +83,7 @@ class Signin extends Component{
                                     .then((data) => {
                                         //console.log(data);
                                         if(data.status==="201"){
-                                            this.props.addUserInfo(data.email,data.firstname,data.id,data.curdir);
+                                            this.props.addUserInfo(data.email,data.firstname,data.id,data.curdir,data.parentdir);
                                             this.props.history.push('/');
                                             console.log(this.props);
                                         }
@@ -140,7 +140,7 @@ function validateEmail(email) {
 function mapDispatchToProps(dispatch){
     return{
         addLoginInfo: (email,password)=>dispatch(addLoginInfo(email,password)),
-        addUserInfo: (email,firstname,userid,curdir)=>dispatch(addUserInfo(email,firstname,userid,curdir)),
+        addUserInfo: (email,firstname,userid,curdir,parentdir)=>dispatch(addUserInfo(email,firstname,userid,curdir,parentdir)),
         removeLoginInfo: ()=>dispatch(removeLoginInfo())
     };
 }

@@ -4,6 +4,9 @@ var signup = require('./services/signup');
 var upload = require('./services/upload');
 var listfd = require('./services/listfd');
 var filedownload = require('./services/filedownload');
+var deletefile = require('./services/deletefile');
+var createFolder = require('./services/createFolder');
+
 
 var producer = connection.getProducer();
 
@@ -121,6 +124,58 @@ consumer4.on('message', function (message) {
     //console.log(JSON.stringify(message.value));
     var data = JSON.parse(message.value);
     filedownload.handle_request(data.data, function(err,res){
+        console.log('after handle'+res);
+        var payloads = [
+            { topic: data.replyTo,
+                messages:JSON.stringify({
+                    correlationId:data.correlationId,
+                    data : res
+                }),
+                partition : 0
+            }
+        ];
+        producer.send(payloads, function(err, data){
+            console.log(data);
+        });
+        return;
+    });
+});
+
+var topic_name5 = 'delete_topic';
+var consumer5 = connection.getConsumer(topic_name5);
+
+console.log('server4 is running');
+consumer5.on('message', function (message) {
+    console.log('\nmessage received at '+topic_name5);
+    //console.log(JSON.stringify(message.value));
+    var data = JSON.parse(message.value);
+    deletefile.handle_request(data.data, function(err,res){
+        console.log('after handle'+res);
+        var payloads = [
+            { topic: data.replyTo,
+                messages:JSON.stringify({
+                    correlationId:data.correlationId,
+                    data : res
+                }),
+                partition : 0
+            }
+        ];
+        producer.send(payloads, function(err, data){
+            console.log(data);
+        });
+        return;
+    });
+});
+
+var topic_name6 = 'new_folder_topic';
+var consumer6 = connection.getConsumer(topic_name6);
+
+console.log('server4 is running');
+consumer6.on('message', function (message) {
+    console.log('\nmessage received at '+topic_name6);
+    //console.log(JSON.stringify(message.value));
+    var data = JSON.parse(message.value);
+    createFolder.handle_request(data.data, function(err,res){
         console.log('after handle'+res);
         var payloads = [
             { topic: data.replyTo,
