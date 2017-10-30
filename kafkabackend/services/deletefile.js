@@ -2,6 +2,7 @@ var mongo = require("../utils/mongo");
 var mongoURL = "mongodb://localhost:27017/dropbox";
 var fs = require('fs');
 const datetime = require('date-time');
+const {ObjectId} = require('mongodb');
 
 function handle_request(msg, callback){
 
@@ -19,7 +20,7 @@ function handle_request(msg, callback){
         deleteFile(filepath);
     }
     else if(filetype==='1'){
-        deleteFolder(fileid);
+         var temp = deleteFolder(fileid);
     }
     
     var res = {
@@ -39,6 +40,8 @@ function deleteFile(filepath){
             console.log(d);
             fs.unlinkSync(filepath);
             fs.rmdirSync(d);
+
+            return 1;
         })
     });
 }
@@ -50,7 +53,18 @@ function deleteFolder(fileid){
         coll.find({parentid:fileid}).toArray(function(err,files){
             if (err) throw err;
             console.log(files);
+            for(var i=0;i<files.length;i++){
+                if(files[0].filetype==='0'){
+                    deleteFile(files[0].filepath);
+                }
+                else{
+                    deleteFolder(files[0]._id);
+                }
+            }
 
+            coll.deleteOne({_id:ObjectId(fileid)},function(err,result){
+
+            })
             
 
         });

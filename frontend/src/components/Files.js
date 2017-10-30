@@ -18,7 +18,8 @@ var fileDownload = require('js-file-download');
 //import IconButton from 'material-ui/IconButton';
 class Files extends Component{
 
-    componentDidMount(){
+    componentWillMount(){
+        this.props.changeCurdir('0','-1');
         this.getFiles(this.props.afterAuth);
     }
 
@@ -46,7 +47,7 @@ class Files extends Component{
                     <ListItem >
                         <div className="row" style={lstyle}>
                             <div className="col-md-1">
-                                {(item.filetype==='0')?<FileIcon style={{width:'50%',height:'50%'}}/>:<FolderIcon style={{width:'60%',height:'60%',color:'#0070e0'}}/>}
+                                {(item.filetype==='0')?<FileIcon style={{width:'50%',height:'50%',color:'#6c7a89',marginTop:'-5px'}}/>:<FolderIcon style={{width:'60%',height:'60%',color:'#0070e0',marginTop:'-5px'}}/>}
                             </div>
                             <div className="col-md-4" style={{overflow: 'hidden',textOverflow: 'ellipsis'}}>
                                 {(item.filetype==='0')?
@@ -96,7 +97,7 @@ class Files extends Component{
                             </div>
                         </div>
                     </ListItem>
-                    <Divider inset />
+                    <Divider inset style={{marginLeft:'30px',marginRight:'50px'}}/>
                 </div>
             ))
         } 
@@ -108,18 +109,27 @@ class Files extends Component{
             <ListItem >
                 <div className="row" style={lstyle}>
                     <div className="col-md-1">
-                    <FolderIcon style={{width:'60%',height:'60%'}}/>
+                    <FolderIcon style={{width:'60%',height:'60%',color:'#0070e0',marginTop:'-5px'}}/>
                     </div>
                     <div className="col-md-11" style={{overflow: 'hidden',textOverflow: 'ellipsis'}}>
                     <a onClick={()=>{
                             console.log("clicked");
-                            this.props.changeCurdir('0','-1');
-                            this.getFiles({userid:this.props.afterAuth.userid,curdir:'0'});
+                            if(this.props.afterAuth.parentdir==='0'){
+                                this.props.changeCurdir('0','-1');
+                                this.getFiles({userid:this.props.afterAuth.userid,curdir:'0'});
+                            }
+                            else{
+                                API.getDirParent({dir:this.props.afterAuth.parentdir})
+                                .then((data)=>{
+                                    this.props.changeCurdir(this.props.afterAuth.parentdir,data.dir);
+                                    this.getFiles({userid:this.props.afterAuth.userid,curdir:this.props.afterAuth.curdir});
+                                });
+                            }
                         }}>..</a>
                     </div>
                 </div>
             </ListItem>
-            <Divider inset />
+            <Divider inset style={{marginLeft:'30px',marginRight:'50px'}}/>
         </div>)
     }
 
@@ -129,7 +139,7 @@ class Files extends Component{
             <ListItem >
                 <div className="row" style={lstyle}>
                     <div className="col-md-1">
-                        <FolderIcon style={{width:'50%',height:'50%'}}/>
+                        <FolderIcon style={{width:'60%',height:'60%',color:'#0070e0',marginTop:'-5px'}}/>
                     </div>
                     
                     
@@ -180,7 +190,7 @@ class Files extends Component{
                     </div>
                 </div>
             </ListItem>
-            <Divider inset />
+            <Divider inset style={{marginLeft:'30px',marginRight:'50px'}}/>
         </div>   
         )
     }
@@ -211,7 +221,7 @@ class Files extends Component{
                             </div>
                         </div>
                     </ListItem>
-                    <Divider inset />
+                    <Divider inset style={{marginLeft:'30px',marginRight:'50px'}}/>
                     {(this.props.afterAuth.curdir!=='0')?this.previousFolder():<div></div>}
                     {this.props.folderstate ? this.newFolder():<div></div>}
                     {this.addFiles()}

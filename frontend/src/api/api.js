@@ -131,3 +131,36 @@ fetch(`${api}/createFolder`, {
         return error;
 });
 
+export const getDirParent = (payload) =>
+fetch(`${api}/getDirParent`, {
+    method: 'POST',
+    headers: {
+        ...headers,
+        'Content-Type': 'application/json'
+    },
+    credentials:'include',
+    body: JSON.stringify(payload)
+}).then(res => {
+    console.log(res);
+    return res.json();
+}).catch(error => {
+        console.log(error);
+        return error;
+});
+
+export const checkSession = () =>
+fetch(`${api}/checkSession`, {
+    method: 'POST',
+    headers: {
+        ...headers,
+        'Content-Type': 'application/json'
+    },
+    credentials:'include'
+}).then(res => {
+    console.log(res);
+    return res.json();
+}).catch(error => {
+        console.log(error);
+        return error;
+});
+

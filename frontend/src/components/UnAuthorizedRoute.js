@@ -1,14 +1,30 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import {Route,Redirect} from 'react-router-dom';
+import * as API from '../api/api';
+import {changeUserState} from '../actions/action.js';
 
 class UnAuthorizedRoute extends Component {
+
+  componentWillMount(){
+    this.props.changeUserState(true,false);
+    API.checkSession()
+    .then((data)=>{
+      if(data.status==='201'){
+        this.props.changeUserState(false,true);
+      }
+      else{
+        this.props.changeUserState(false,false);
+      }
+    });
+  }
   
     render() {
       const { component: Component, ...rest } = this.props
       return (
         <Route {...rest} render={props => {
-          return !(this.props.afterAuth.isLoggedin)
+          if (this.props.userstate.pending) return <div>...Loading...</div>
+          return !(this.props.userstate.logged)
             ? <Component {...this.props} />
             : <Redirect to="/" />
         }} />
@@ -18,9 +34,16 @@ class UnAuthorizedRoute extends Component {
   
   const mapStateToProps= state =>{
     return{
-        afterAuth:state.afterAuth
+        afterAuth:state.afterAuth,
+        userstate: state.userstate
     };
   }
+
+  const mapDispatchToProps = dispatch =>{
+    return{
+        changeUserState: (p,l) =>dispatch(changeUserState(p,l))
+    }
+}
   
-  export default connect(mapStateToProps)(UnAuthorizedRoute)
+  export default connect(mapStateToProps,mapDispatchToProps)(UnAuthorizedRoute)
   

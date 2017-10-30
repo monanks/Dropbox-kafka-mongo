@@ -11,7 +11,8 @@ import {
     ADD_FILE_LIST,
     CREATE_FOLDER,
     CLOSE_FOLDER,
-    CHANGE_CURDIR
+    CHANGE_CURDIR,
+    CHANGE_USER_STATE
 } from '../actions/action';
 
 function login(state={},action){
@@ -108,12 +109,25 @@ function folderstate(state=false,action){
             return state;
     }
 }
+
+function userstate(state={},action){
+    switch(action.type){
+        case CHANGE_USER_STATE:
+            return {
+                pending: action.pending,
+                logged: action.logged
+            }
+        default:
+            return state;
+    }
+}
 const GreatReducer =  combineReducers({
     login,
     register,
     afterAuth,
     file,
-    folderstate    
+    folderstate,
+    userstate    
 });        
 
 const wholeReducer = composeResetReducer(GreatReducer,{});

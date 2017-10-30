@@ -106,9 +106,7 @@ app.post('/signup', function(req,res){
 });
 
 app.post('/doupload', function(req,res){
-    //console.log(req.files.file);
     
-
     if(!req.files){
         res.json({status:'202',message:'FILE NOT UPLOADED'});
     }
@@ -130,23 +128,6 @@ app.post('/doupload', function(req,res){
                 res.json(data);
             }
     });
-    //console.log(req.body.curdir+'curdir');
-    // console.log(req.body.userid+'userid');
-    // console.log(JSON.stringify(req.files.file)+'file');
-
-    // let samplefile = req.files.file;
-
-    // console.log(samplefile.mv);
-
-    // samplefile.mv('./hello.jpg',function(err){
-    //     if(err){
-    //         console.log(err);
-    //     }
-    //     else{
-    //         console.log('hello');
-    //     }
-    // });
-    //res.json();
 });
 
 app.post('/getFiles',function(req,res){
@@ -226,4 +207,34 @@ app.post('/createFolder',function(req,res){
         }
     });
 });
+
+app.post('/getDirParent',function(req,res){
+
+    var payload = {
+        dir: req.body.dir
+    };
+    console.log(payload);
+
+    kafka.make_request('getparent_topic',payload,function(err,data){
+        console.log(data);
+        if(err){
+            res.json(err);
+        }
+        else{
+            res.json(data);
+        }
+    });
+});
+
+app.post('/checkSession',function(req,res){
+    console.log(req.session.userid+' hello');
+    if(req.session.userid){
+        console.log("authenticated");
+        res.json({status:'201'});
+    }
+    else{
+        res.json({status:'202'})
+    }
+})
+
 module.exports = app;
