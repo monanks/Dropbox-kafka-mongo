@@ -1,5 +1,6 @@
 var mongo = require("../utils/mongo");
 var mongoURL = "mongodb://localhost:27017/dropbox";
+var bcrypt = require("bcrypt");
 
 function handle_request(msg, callback){
 
@@ -22,7 +23,7 @@ function handle_request(msg, callback){
                     };
                     callback(null,res);
                 } else {
-                    if(user.password===msg.password){
+                    if(bcrypt.compare(msg.password,user.password)){
                         var res = {
                             status: '201',
                             email: user.email,

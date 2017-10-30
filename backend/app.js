@@ -13,6 +13,7 @@ var mongoSessionURL = "mongodb://localhost:27017/sessions";
 var expressSessions = require("express-session");
 var mongoStore = require("connect-mongo/es5")(expressSessions);
 const fileUpload = require('express-fileupload');
+var CryptoJS = require("crypto-js");
 
 var kafka = require('./routes/kafka/client');
 
@@ -61,7 +62,7 @@ app.post('/signout', function(req,res) {
 });
 
 app.post('/signin', function(req, res) {
-    console.log('hello from'+req.body.username);
+    console.log('hello from'+req.body.password);
     passport.authenticate('login', function(err, data) {
         if(err) {
             res.status(500).send();
@@ -83,15 +84,15 @@ app.post('/signin', function(req, res) {
 });
 
 app.post('/signup', function(req,res){
-    console.log(' the other side'+req.body.email+req.body.firstname+req.body.lastname+req.body.password);
+    //console.log(' the other side'+CryptoJS.AES.decrypt((req.body.password).toString().toString(CryptoJS.enc.Utf8));
 
     var payload = {
         email: req.body.email,
         firstname: req.body.firstname,
         lastname: req.body.lastname,
-        password: req.body.password
+        password: CryptoJS.AES.decrypt((req.body.password).toString(),'273').toString(CryptoJS.enc.Utf8)
     };
-
+    console.log(payload);
     kafka.make_request('signup_topic',payload, function(err,data){
             console.log(data.status);
             console.log(data);

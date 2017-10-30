@@ -4,7 +4,7 @@ class AccountContent extends Component{
     render(){
         return(
             <div>
-                Hello
+                
             </div>
         )
     }

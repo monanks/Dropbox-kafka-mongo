@@ -8,6 +8,7 @@ import { withRouter } from 'react-router-dom';
 import Snackbar from 'material-ui/Snackbar';
 //import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
+import CryptoJS from 'crypto-js';
 
 class Signin extends Component{
 
@@ -79,7 +80,12 @@ class Signin extends Component{
                                         this.state.username,
                                         this.state.password);
                                     console.log(this.props);
-                                    API.doLogin(this.state)
+                                    var payload = {
+                                        username: this.state.username,
+                                        password: CryptoJS.AES.encrypt(this.state.password,'273').toString()
+                                    }
+                                    console.log(payload);
+                                    API.doLogin(payload)
                                     .then((data) => {
                                         //console.log(data);
                                         if(data.status==="201"){

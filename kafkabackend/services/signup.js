@@ -1,6 +1,7 @@
 var mongo = require("../utils/mongo");
 var mongoURL = "mongodb://localhost:27017/dropbox";
 var fs = require('fs');
+var bcrypt = require("bcrypt");
 
 function handle_request(msg, callback){
 
@@ -19,7 +20,14 @@ function handle_request(msg, callback){
                 };
                 callback(null,res);
             } else {
-                coll.insertOne(msg,function(err,user){
+            	var salt = bcrypt.genSaltSync(10);
+            	var data = {
+            		email: msg.email,
+            		firstname: msg.firstname,
+            		lastname: msg.lastname,
+            		password: bcrypt.hashSync(msg.password,salt)
+            	};
+                coll.insertOne(data,function(err,user){
                     if(err) throw err;
                     console.log(user.ops[0]._id);
                     var id = user.ops[0]._id;

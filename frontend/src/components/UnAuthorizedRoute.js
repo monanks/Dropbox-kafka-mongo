@@ -23,7 +23,7 @@ class UnAuthorizedRoute extends Component {
       const { component: Component, ...rest } = this.props
       return (
         <Route {...rest} render={props => {
-          if (this.props.userstate.pending) return <div>...Loading...</div>
+          if (this.props.userstate.pending===undefined || this.props.userstate.pending===true) return <div>...Loading...</div>
           return !(this.props.userstate.logged)
             ? <Component {...this.props} />
             : <Redirect to="/" />

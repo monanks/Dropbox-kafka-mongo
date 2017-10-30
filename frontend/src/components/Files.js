@@ -12,6 +12,8 @@ import DLIcon from 'material-ui-icons/GetApp';
 import CheckIcon from 'material-ui-icons/Check';
 import Divider from 'material-ui/Divider';
 import TextField from 'material-ui/TextField';
+import IconButton from 'material-ui/IconButton';
+import Tooltip from 'material-ui/Tooltip';
 
 var fileDownload = require('js-file-download');
 
@@ -21,6 +23,10 @@ class Files extends Component{
     componentWillMount(){
         this.props.changeCurdir('0','-1');
         this.getFiles(this.props.afterAuth);
+    }
+
+    componentDidMount(){
+        this.props.closeFolder();
     }
 
     getFiles = (payload) => {
@@ -68,6 +74,8 @@ class Files extends Component{
                             </div>
                             <div className="col-md-1">
                                 {(item.filetype==='0')?
+                                <Tooltip id="tooltip-icon" title="Download" placement="bottom">
+                                <IconButton raised style={{margin:'-12px'}}>
                                 <DLIcon style={{width:'50%',height:'50%'}} onClick={()=>{
                                     console.log(item.fileid);
                                     API.dlFile({fileid: item.fileid,filepath:item.path})
@@ -76,11 +84,12 @@ class Files extends Component{
                                         fileDownload(Buffer.from(data.data),item.filename);
                                     })
                                 }
-                                }/>:<div></div>}
+                                }/></IconButton></Tooltip>:<div></div>}
                                 
                             </div>
                             <div className="col-md-1">
-                                {/* <IconButton id={item.fileid} onclick={()=>{console.log('click')}}><DeleteIcon/></IconButton> */}
+                            <Tooltip id="tooltip-icon" title="Delete" placement="bottom">
+                            <IconButton raised style={{margin:'-12px'}}>
                                 <DeleteIcon style={{marginTop:'-2px',width:'50%',height:'50%'}} onClick={()=>{
                                     //console.log(item.fileid);
                                     var payload = {fileid: item.fileid, filepath:item.path, filetype:item.filetype};
@@ -94,6 +103,8 @@ class Files extends Component{
                                     })
                                 }
                                 } onFocus={()=>{console.log("hovering")}}/>
+                            </IconButton>
+                            </Tooltip>
                             </div>
                         </div>
                     </ListItem>
@@ -125,7 +136,7 @@ class Files extends Component{
                                     this.getFiles({userid:this.props.afterAuth.userid,curdir:this.props.afterAuth.curdir});
                                 });
                             }
-                        }}>..</a>
+                        }}>..Go Back</a>
                     </div>
                 </div>
             </ListItem>
@@ -150,6 +161,27 @@ class Files extends Component{
                             shrink: true,
                         }}
                         fullWidth
+                        onKeyDown = {(event)=>{if (event.keyCode === 13) {
+                            var foldername = document.getElementById('full-width').value;
+
+                            if(foldername!=="" && foldername!==undefined){
+                                var payload = {
+                                    foldername:document.getElementById('full-width').value,
+                                    userid: this.props.afterAuth.userid,
+                                    curdir: this.props.afterAuth.curdir
+                                };
+                                console.log(payload);
+                                API.createFolder(payload)
+                                .then((data)=>{
+                                    if(data.status==='201'){
+                                        this.getFiles(this.props.afterAuth);
+                                    }
+                                    else{
+                                    }
+                                });
+                            }
+                            this.props.closeFolder();
+                        }}}
                     />
                     </div>
                     <div className="col-md-2">
@@ -159,34 +191,42 @@ class Files extends Component{
                         
                     </div>
                     <div className="col-md-1">
-                        {/* <IconButton id={item.fileid} onclick={()=>{console.log('click')}}><DeleteIcon/></IconButton> */}
-                        <CheckIcon style={{marginTop:'-2px',width:'50%',height:'50%'}} onClick={()=>{
-                            
-                            var payload = {
-                                foldername:document.getElementById('full-width').value,
-                                userid: this.props.afterAuth.userid,
-                                curdir: this.props.afterAuth.curdir
-                            };
-                            console.log(payload);
-                            API.createFolder(payload)
-                            .then((data)=>{
-                                if(data.status==='201'){
-                                    this.getFiles(this.props.afterAuth);
-                                }
-                                else{
+                    <Tooltip id="tooltip-icon" title="Create Folder" placement="bottom">
+                    <IconButton style={{margin:'-12px'}}>
+                        <CheckIcon id='btn' style={{marginTop:'-2px',width:'50%',height:'50%'}} onClick={()=>{
+                            var foldername = document.getElementById('full-width').value;
 
-                                }
-                            });
+                            if(foldername!=="" && foldername!==undefined){
+                                var payload = {
+                                    foldername:document.getElementById('full-width').value,
+                                    userid: this.props.afterAuth.userid,
+                                    curdir: this.props.afterAuth.curdir
+                                };
+                                console.log(payload);
+                                API.createFolder(payload)
+                                .then((data)=>{
+                                    if(data.status==='201'){
+                                        this.getFiles(this.props.afterAuth);
+                                    }
+                                    else{
+                                    }
+                                });
+                            }
                             this.props.closeFolder();
                         }
                         }/>
+                    </IconButton>
+                    </Tooltip>
                     </div>
                     <div className="col-md-1">
-                        {/* <IconButton id={item.fileid} onclick={()=>{console.log('click')}}><DeleteIcon/></IconButton> */}
+                    <Tooltip id="tooltip-icon" title="Cancel" placement="bottom">
+                    <IconButton raised style={{margin:'-12px'}}>
                         <HOIcon style={{marginTop:'-2px',width:'50%',height:'50%'}} onClick={()=>{
                             this.props.closeFolder();
                         }
                         }/>
+                    </IconButton>
+                    </Tooltip>
                     </div>
                 </div>
             </ListItem>
