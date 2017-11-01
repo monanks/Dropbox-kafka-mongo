@@ -15,6 +15,7 @@ function handle_request(msg, callback){
 	mongo.connect(mongoURL,function(){
 		console.log('connected to mongo');
     	var coll = mongo.collection('files');
+        var coll1 = mongo.collection('activity');
 
     	var data = {
     		name: foldername,
@@ -22,7 +23,8 @@ function handle_request(msg, callback){
     		shared: '0',
             filetype: '1',
     		ownerid: userid,
-    		parentid: curdir
+    		parentid: curdir,
+            star: '0'
     	}
 
     	console.log(data);
@@ -31,11 +33,21 @@ function handle_request(msg, callback){
     		if(err) throw err;
     		console.log(file.ops[0]._id);
 
-            var res = {
-                status: '201',
-                message: 'FOLDER CREATED SUCCESSFULLY'
+            var act = {
+                userid: userid,
+                task: 'Created Folder',
+                name: foldername,
+                datetime: datetime()
             }
-            callback(null,res);
+
+            coll1.insertOne(act,function(err,file){
+                if(err) throw err;
+                var res = {
+                    status: '201',
+                    message: 'FOLDER CREATED SUCCESSFULLY'
+                }
+                callback(null,res);
+            });
     	});
 	});
 

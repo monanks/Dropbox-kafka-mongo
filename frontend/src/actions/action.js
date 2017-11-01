@@ -11,6 +11,14 @@ export const CREATE_FOLDER = 'CREATE_FOLDER';
 export const CLOSE_FOLDER = 'CLOSE_FOLDER';
 export const CHANGE_CURDIR = 'CHANGE_CURDIR';
 export const CHANGE_USER_STATE = 'CHANGE_USER_STATE';
+export const ADD_ACTIVITY_LIST = 'ADD_ACTIVITY_LIST';
+
+export function addActivityList(activitylist){
+    return{
+        type: ADD_ACTIVITY_LIST,
+        activitylist
+    }
+}
 
 export function changeUserState(pending,logged){
     return {

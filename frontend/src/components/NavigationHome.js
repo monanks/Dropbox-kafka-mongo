@@ -4,7 +4,7 @@ import {NavLink} from 'react-router-dom';
 class NavigationHome extends Component{
     render(){
         return(
-        <div style={nav}>
+        <div className="row" style={nav}>
             <div className="col-md-2">
             </div>
 

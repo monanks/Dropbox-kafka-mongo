@@ -13,6 +13,25 @@ function handle_request(msg, callback){
 
     console.log(filepath);
 
+    if(filepath===undefined){
+        var res = {
+            status: '202'
+        }
+        console.log(res);
+        callback(null,res);
+    }
+    else{
+        fs.readFile(filepath,function(err,data){
+            if(err) throw err;
+            //console.log(data);
+            var res = {
+                status: '201',
+                data: data
+            }
+            console.log(res);
+            callback(null,res);
+        });
+    }
     // mongo.connect(mongoURL,function(){
     //     var coll = mongo.collection('files');
     //     coll.findOne({filepath:filepath},function(err,result){
@@ -27,16 +46,7 @@ function handle_request(msg, callback){
     //     })
     // });
 
-    fs.readFile(filepath,function(err,data){
-        if(err) throw err;
-        //console.log(data);
-        var res = {
-            status: '201',
-            data: data
-        }
-        console.log(res);
-        callback(null,res);
-    });
+    
 }
 
 exports.handle_request = handle_request;

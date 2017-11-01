@@ -14,11 +14,15 @@ import Divider from 'material-ui/Divider';
 import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
 import Tooltip from 'material-ui/Tooltip';
+import StarIcon from 'material-ui-icons/Star';
+import StarBorderIcon from 'material-ui-icons/StarBorder';
 
 var fileDownload = require('js-file-download');
 
 //import IconButton from 'material-ui/IconButton';
 class Files extends Component{
+
+    state = {};
 
     componentWillMount(){
         this.props.changeCurdir('0','-1');
@@ -26,10 +30,29 @@ class Files extends Component{
     }
 
     componentDidMount(){
+        // this.props.changeCurdir('0','-1');
+        // this.getFiles(this.props.afterAuth);
         this.props.closeFolder();
     }
 
+    setStar = (fileid, starvalue) =>{
+        var payload= {
+            fileid:fileid,
+            star: starvalue
+        }
+        console.log('.................');
+        console.log(payload);
+        console.log('.................');
+        API.setStar(payload)
+        .then((data)=>{
+            if(data.status==='201'){
+                this.getFiles(this.props.afterAuth);
+            }
+        });
+    }
+
     getFiles = (payload) => {
+        console.log('hello');
         console.log(payload);
         API.getFiles(payload)
             .then((data) => {
@@ -50,21 +73,41 @@ class Files extends Component{
             console.log(var1);
             return var1.map(item=>(
                 <div >
-                    <ListItem >
+                    <ListItem disabled={false} style={{marginLeft:'20px',marginRight:'20px'}} id={item.fileid}  onMouseOver={()=>{
+                        document.getElementById(item.fileid).style.background = "#ebf4fd";
+                    }}
+                    onMouseOut={()=>{
+                        document.getElementById(item.fileid).style.background = "white";
+                    }}>
                         <div className="row" style={lstyle}>
-                            <div className="col-md-1">
-                                {(item.filetype==='0')?<FileIcon style={{width:'50%',height:'50%',color:'#6c7a89',marginTop:'-5px'}}/>:<FolderIcon style={{width:'60%',height:'60%',color:'#0070e0',marginTop:'-5px'}}/>}
+                            <div className="col-md-1" onClick={()=>{
+                                    if(item.filetype==='1'){
+                                        console.log("clicked");
+                                        this.props.changeCurdir(item.fileid,this.props.afterAuth.curdir);
+                                        this.getFiles({userid:this.props.afterAuth.userid,curdir:item.fileid});
+                                    } 
+                                }}>
+                                {(item.filetype==='0')?<FileIcon style={{width:'50%',height:'50%',color:'#6c7a89',marginTop:'-5px'}}/>:<FolderIcon style={{width:'60%',height:'60%',color:'#92ceff',marginTop:'-5px'}}/>}
                             </div>
-                            <div className="col-md-4" style={{overflow: 'hidden',textOverflow: 'ellipsis'}}>
+                            <div className="col-md-3" style={{overflow: 'hidden',textOverflow: 'ellipsis'}} onClick={()=>{
+                                    if(item.filetype==='1'){
+                                        console.log("clicked");
+                                        this.props.changeCurdir(item.fileid,this.props.afterAuth.curdir);
+                                        this.getFiles({userid:this.props.afterAuth.userid,curdir:item.fileid});
+                                    } 
+                                }}>
                                 {(item.filetype==='0')?
                                 item.filename:
-                                <a onClick={()=>{
-                                    console.log("clicked");
-                                    this.props.changeCurdir(item.fileid,this.props.afterAuth.curdir);
-                                    this.getFiles({userid:this.props.afterAuth.userid,curdir:item.fileid});
-                                }}>{item.filename}</a>}
+                                <a onHover>{item.filename}</a>}
                             </div>
-                            
+                            <div className="col-md-1">
+                                <Tooltip id="tooltip-icon" title={(item.star==='1'?"Unstar":"Star")} placement="bottom">
+                                <IconButton style={{margin:'-12px'}}>
+                                    {(item.star==='1')?<StarIcon style={{color:'#4994dd'}} onClick={()=>{this.setStar(item.fileid,'0')}}/>
+                                    :<StarBorderIcon style={{color:'#4994dd'}} onClick={()=>{this.setStar(item.fileid,'1')}}/>}
+                                </IconButton>
+                                </Tooltip>
+                            </div>
                             <div className="col-md-3">
                                 {/* {item.datetime} */}
                                 {item.datetime.substring(0,16)}
@@ -75,7 +118,7 @@ class Files extends Component{
                             <div className="col-md-1">
                                 {(item.filetype==='0')?
                                 <Tooltip id="tooltip-icon" title="Download" placement="bottom">
-                                <IconButton raised style={{margin:'-12px'}}>
+                                <IconButton style={{margin:'-12px'}}>
                                 <DLIcon style={{width:'50%',height:'50%'}} onClick={()=>{
                                     console.log(item.fileid);
                                     API.dlFile({fileid: item.fileid,filepath:item.path})
@@ -89,10 +132,16 @@ class Files extends Component{
                             </div>
                             <div className="col-md-1">
                             <Tooltip id="tooltip-icon" title="Delete" placement="bottom">
-                            <IconButton raised style={{margin:'-12px'}}>
+                            <IconButton style={{margin:'-12px'}}>
                                 <DeleteIcon style={{marginTop:'-2px',width:'50%',height:'50%'}} onClick={()=>{
                                     //console.log(item.fileid);
-                                    var payload = {fileid: item.fileid, filepath:item.path, filetype:item.filetype};
+                                    var payload = {
+                                        fileid: item.fileid,
+                                        filepath:item.path,
+                                        filetype:item.filetype,
+                                        userid:this.props.afterAuth.userid,
+                                        filename: item.filename
+                                    };
                                     console.log(payload);
                                     API.deleteFile(payload)
                                     .then((data)=>{
@@ -117,13 +166,12 @@ class Files extends Component{
     previousFolder = () => {
         return (
             <div >
-            <ListItem >
+            <ListItem style={{marginLeft:'20px',marginRight:'20px'}} >
                 <div className="row" style={lstyle}>
                     <div className="col-md-1">
-                    <FolderIcon style={{width:'60%',height:'60%',color:'#0070e0',marginTop:'-5px'}}/>
+                    <FolderIcon style={{width:'60%',height:'60%',color:'#92ceff',marginTop:'-5px'}}/>
                     </div>
-                    <div className="col-md-11" style={{overflow: 'hidden',textOverflow: 'ellipsis'}}>
-                    <a onClick={()=>{
+                    <div className="col-md-11" style={{overflow: 'hidden',textOverflow: 'ellipsis'}} onClick={()=>{
                             console.log("clicked");
                             if(this.props.afterAuth.parentdir==='0'){
                                 this.props.changeCurdir('0','-1');
@@ -136,7 +184,8 @@ class Files extends Component{
                                     this.getFiles({userid:this.props.afterAuth.userid,curdir:this.props.afterAuth.curdir});
                                 });
                             }
-                        }}>..Go Back</a>
+                        }}>
+                    <a >..Go Back</a>
                     </div>
                 </div>
             </ListItem>
@@ -147,10 +196,10 @@ class Files extends Component{
     newFolder = () => {
         return (
             <div>
-            <ListItem >
+            <ListItem style={{marginLeft:'20px',marginRight:'20px'}}>
                 <div className="row" style={lstyle}>
                     <div className="col-md-1">
-                        <FolderIcon style={{width:'60%',height:'60%',color:'#0070e0',marginTop:'-5px'}}/>
+                        <FolderIcon style={{width:'60%',height:'60%',color:'#92ceff',marginTop:'-5px'}}/>
                     </div>
                     
                     
@@ -236,9 +285,19 @@ class Files extends Component{
     }
     
     render(){
+
+        //style={{overflow:'scroll',overFlowY:'hidden!important',overFlowX:'hidden!important',position:'relative',maxHeight:'560px'}}
+        if(this.props.file.list.length===0){
+            return (
+                <div className="row" style={{fontSize:'18px',marginLeft:'0px',marginTop:'20px',height:'100%',width:'100%',textAlign:'center'}}>
+                    Nothing To Show. Upload Some Files.
+                </div>
+            );
+        }
+        
         return(
             <div className="row" >
-                <List>
+                <List  >
                     <ListItem >
                         <div className="row" style={hstyle}>
                             <div className="col-md-1">

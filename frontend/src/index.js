@@ -26,30 +26,32 @@ let store = compose(
     )(createStore)(wholeReducer,window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 console.log(store);
-ReactDOM.render(
-    <Provider store={store}>
 
-        <MuiThemeProvider theme={theme}>
-            <BrowserRouter>
-                <Switch>
-                    <UnAuthorizedRoute exact path="/login" component={LoginRegister}/>
-                    <AuthorizedRoute exact path="/" component={MainPage}/>
-                    <AuthorizedRoute exact path="/hello" component={Hello}/>
-                    <AuthorizedRoute exact path="/files" component={FilePage}/>
-                    <AuthorizedRoute exact path="/groups" component={GroupPage}/>
-                    <AuthorizedRoute exact path="/account" component={Account}/>
-                </Switch>
-            </BrowserRouter>
-        </MuiThemeProvider>
-        
-    </Provider>, document.getElementById('root')
-);
 registerServiceWorker();
 
 store.subscribe(()=>{
     //console.log();
 });
 
-persistStore(store);
+persistStore(store,{}, ()=>{
+    ReactDOM.render(
+        <Provider store={store}>
+    
+            <MuiThemeProvider theme={theme}>
+                <BrowserRouter>
+                    <Switch>
+                        <UnAuthorizedRoute exact path="/login" component={LoginRegister}/>
+                        <AuthorizedRoute exact path="/" component={MainPage}/>
+                        <AuthorizedRoute exact path="/hello" component={Hello}/>
+                        <AuthorizedRoute exact path="/files" component={FilePage}/>
+                        <AuthorizedRoute exact path="/groups" component={GroupPage}/>
+                        <AuthorizedRoute exact path="/account" component={Account}/>
+                    </Switch>
+                </BrowserRouter>
+            </MuiThemeProvider>
+            
+        </Provider>, document.getElementById('root')
+    );
+});
 
 export default store;

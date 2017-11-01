@@ -11,16 +11,17 @@ function handle_request(msg, callback){
 	var fileid = msg.fileid;
 	var filepath = msg.filepath;
     var filetype = msg.filetype;
+    var userid = msg.userid;
 
     console.log(fileid);
     console.log(filepath);
     console.log(filetype);
 
     if(filetype==='0'){
-        deleteFile(filepath);
+        deleteFile(filepath,userid);
     }
     else if(filetype==='1'){
-         var temp = deleteFolder(fileid);
+         var temp = deleteFolder(fileid,userid);
     }
     
     var res = {
@@ -29,45 +30,82 @@ function handle_request(msg, callback){
     callback(null,res);
 }
 
-function deleteFile(filepath){
+function deleteFile(filepath,userid){
     mongo.connect(mongoURL,function(){
         var coll = mongo.collection('files');
-        coll.deleteOne({filepath:filepath},function(err,result){
-            if (err) throw err;
-            var dir = filepath.split('/');
-            var a = dir.splice(-1);
-            var d = dir.join('/');
-            console.log(d);
-            fs.unlinkSync(filepath);
-            fs.rmdirSync(d);
+        var coll1 = mongo.collection('activity');
 
-            return 1;
-        })
+        coll.findOne({filepath:filepath},function(err,result){
+            console.log(result);
+            var filename = result.name;
+
+            coll.deleteOne({filepath:filepath},function(err,result){
+                if (err) throw err;
+                var dir = filepath.split('/');
+                var a = dir.splice(-1);
+                var d = dir.join('/');
+                console.log(d);
+                fs.unlinkSync(filepath);
+                fs.rmdirSync(d);
+
+                var act = {
+                    userid: userid,
+                    task: 'Deleted File',
+                    name: filename,
+                    datetime: datetime()
+                }
+
+                coll1.insertOne(act,function(err,file){            
+                    if(err) throw err;
+                });
+                return 1;
+            });
+
+        });
+
     });
 }
 
-function deleteFolder(fileid){
+function deleteFolder(fileid,userid){
     mongo.connect(mongoURL,function(){
-
         var coll = mongo.collection('files');
-        coll.find({parentid:fileid}).toArray(function(err,files){
-            if (err) throw err;
-            console.log(files);
-            for(var i=0;i<files.length;i++){
-                if(files[0].filetype==='0'){
-                    deleteFile(files[0].filepath);
-                }
-                else{
-                    deleteFolder(files[0]._id);
-                }
-            }
+        var coll1 = mongo.collection('activity');
 
-            coll.deleteOne({_id:ObjectId(fileid)},function(err,result){
+        coll.findOne({_id:ObjectId(fileid)},function(err,result){
+            var filename = result.name;
 
-            })
-            
+            coll.find({parentid:fileid}).toArray(function(err,files){
+                if (err) throw err;
+                console.log(files);
+                for(var i=0;i<files.length;i++){
+                    if(files[0].filetype==='0'){
+                        deleteFile(files[0].filepath,userid);
+                    }
+                    else{
+                        deleteFolder(files[0]._id,userid);
+                    }
+                }
+
+                coll.deleteOne({_id:ObjectId(fileid)},function(err,result){
+
+                })
+                
+                var act = {
+                    userid: userid,
+                    task: 'Deleted Folder',
+                    name: filename,
+                    datetime: datetime()
+                }
+
+                coll1.insertOne(act,function(err,file){            
+                    if(err) throw err;
+                });
+
+            });
 
         });
+
+        
 
     });
 }

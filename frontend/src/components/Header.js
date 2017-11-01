@@ -48,7 +48,7 @@ const boxstyle={
 }
 
 const hstyle={
-    fontSize: "20px"
+    fontSize: "22px"
 }
 function mapDispatchToProps(dispatch){
     return{

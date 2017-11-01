@@ -1,5 +1,5 @@
-//const api = process.env.REACT_APP_CONTACTS_API_URL || 'http://localhost:3001' || 'http://10.0.0.184:3001'
-const api = process.env.REACT_APP_CONTACTS_API_URL || 'http://10.0.0.184:3001'
+const api = process.env.REACT_APP_CONTACTS_API_URL || 'http://localhost:3001'
+//const api = process.env.REACT_APP_CONTACTS_API_URL || 'http://10.0.0.184:3001'
 
 const headers = {
     'Accept': 'application/json'
@@ -165,3 +165,36 @@ fetch(`${api}/checkSession`, {
         return error;
 });
 
+export const setStar = (payload) =>
+fetch(`${api}/setStar`, {
+    method: 'POST',
+    headers: {
+        ...headers,
+        'Content-Type': 'application/json'
+    },
+    credentials:'include',
+    body: JSON.stringify(payload)
+}).then(res => {
+    console.log(res);
+    return res.json();
+}).catch(error => {
+        console.log(error);
+        return error;
+});
+
+export const getActivity = (payload) =>
+fetch(`${api}/listactivity`, {
+    method: 'POST',
+    headers: {
+        ...headers,
+        'Content-Type': 'application/json'
+    },
+    credentials:'include',
+    body: JSON.stringify(payload)
+}).then(res => {
+    console.log(res);
+    return res.json();
+}).catch(error => {
+        console.log(error);
+        return error;
+});

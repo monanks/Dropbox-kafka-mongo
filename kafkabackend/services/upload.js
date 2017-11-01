@@ -15,12 +15,14 @@ function handle_request(msg, callback){
 	mongo.connect(mongoURL,function(){
 		console.log('connected to mongo');
     	var coll = mongo.collection('files');
+        var coll1 = mongo.collection('activity');
 
     	var data = {
     		name: ufile.name,
     		datetimeCreated: datetime(),
     		shared: '0',
             filetype: '0',
+            star: '0',
     		ownerid: userid,
     		parentid: curdir
             //content:ufile.data.data
@@ -47,11 +49,21 @@ function handle_request(msg, callback){
             	else{
             		coll.updateOne({'_id':fileid},{$set:{'filepath':path}},function(err,file){
             			if(err) throw err;
-            			var res = {
-            				status: '201',
-            				message: 'FILE UPLOADED SUCCESSFULLY'
-            			}
-            			callback(null,res);
+                        var act = {
+                            userid: userid,
+                            task: 'Uploaded File',
+                            name: ufile.name,
+                            datetime: datetime()
+                        }
+
+                        coll1.insertOne(act,function(err,file){
+                            if(err) throw err;
+                                var res = {
+                                status: '201',
+                                message: 'FILE UPLOADED SUCCESSFULLY'
+                            }
+                            callback(null,res);
+                        });
             		})
             	}
             });

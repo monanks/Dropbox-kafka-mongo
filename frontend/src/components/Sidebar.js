@@ -5,7 +5,7 @@ import React,{Component} from 'react';
 //import FolderIcon from 'material-ui-icons/Folder';
 import * as API from '../api/api.js';
 import {connect} from 'react-redux';
-import {addFileList} from '../actions/action.js';
+import {addFileList,addActivityList} from '../actions/action.js';
 //import FileIcon from 'material-ui-icons/InsertDriveFile';
 
 class Sidebar extends Component{
@@ -18,6 +18,21 @@ class Sidebar extends Component{
                 if(data.status==="201"){
                     this.props.addFileList(data.data);
                     //this.state=data.files;
+                }
+                else{
+
+                }
+            });
+    };
+
+    getActivity = (payload) => {
+        console.log('hello activity list');
+        console.log(payload);
+        API.getActivity(payload)
+            .then((data) => {
+                //console.log(data);
+                if(data.status==="201"){
+                    this.props.addActivityList(data.data);
                 }
                 else{
 
@@ -46,6 +61,7 @@ class Sidebar extends Component{
                                 console.log(data);
                                 if (data.status === '201') {
                                     this.getFiles();
+                                    this.getActivity(this.props.afterAuth);
                                 }
                                 else{
                                     
@@ -80,13 +96,15 @@ const mapStateToProps= state =>{
     console.log(state.afterAuth);
     return{
         afterAuth: state.afterAuth,
-        file: state.file  
+        file: state.file,
+        activity: state.activity  
     };
 }
 
 const mapDispatchToProps = dispatch =>{
     return{
-        addFileList: (filelist) =>dispatch(addFileList(filelist))
+        addFileList: (filelist) =>dispatch(addFileList(filelist)),
+        addActivityList: (filelist) =>dispatch(addActivityList(filelist))
     }
 }
 

@@ -174,7 +174,9 @@ app.post('/deleteFile',function(req,res){
     var payload = {
         fileid: req.body.fileid,
         filepath: req.body.filepath,
-        filetype: req.body.filetype
+        filetype: req.body.filetype,
+        userid: req.body.userid,
+        filename: req.body.filename
     };
     console.log(payload);
 
@@ -236,6 +238,45 @@ app.post('/checkSession',function(req,res){
     else{
         res.json({status:'202'})
     }
-})
+});
+
+app.post('/setStar',function(req,res){
+
+    var payload = {
+        fileid: req.body.fileid,
+        star: req.body.star
+    };
+    console.log('.................');
+    console.log(payload);
+    console.log('.................');
+    kafka.make_request('setstar_topic',payload,function(err,data){
+        console.log(data);
+        if(err){
+            res.json(err);
+        }
+        else{
+            res.json(data);
+        }
+    });
+});
+
+app.post('/listactivity',function(req,res){
+
+    var payload = {
+        userid: req.body.userid
+    };
+    console.log('.................');
+    console.log(payload);
+    console.log('.................');
+    kafka.make_request('listactivity_topic',payload,function(err,data){
+        console.log(data);
+        if(err){
+            res.json(err);
+        }
+        else{
+            res.json(data);
+        }
+    });
+});
 
 module.exports = app;

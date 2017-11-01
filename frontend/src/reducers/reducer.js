@@ -12,7 +12,8 @@ import {
     CREATE_FOLDER,
     CLOSE_FOLDER,
     CHANGE_CURDIR,
-    CHANGE_USER_STATE
+    CHANGE_USER_STATE,
+    ADD_ACTIVITY_LIST
 } from '../actions/action';
 
 function login(state={},action){
@@ -99,6 +100,21 @@ function file(state={},action){
     }
 }
 
+function activity(state={},action){
+    switch(action.type){
+        case ADD_ACTIVITY_LIST:
+            return{
+                list: action.activitylist
+            }
+        case 'persist/REHYDRATE':
+            var incoming = action.payload.activity;
+            if(incoming) return incoming;
+            return state;
+        default:
+            return state;
+    }
+}
+
 function folderstate(state=false,action){
     switch(action.type){
         case CREATE_FOLDER:
@@ -127,7 +143,8 @@ const GreatReducer =  combineReducers({
     afterAuth,
     file,
     folderstate,
-    userstate    
+    userstate,
+    activity    
 });        
 
 const wholeReducer = composeResetReducer(GreatReducer,{});
