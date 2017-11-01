@@ -85,11 +85,12 @@ const cfu={
     paddingLeft: '12px',
     cursor: 'pointer',
     backgroundColor: '#0070e0',
-    marginRight:"0px",
+    margin:"10px",
     width:'100%',
     height:'100%',
-    fontColor:'white',
-    textAlign:'center'
+    color:'white',
+    textAlign:'center',
+    marginLeft:'-20px'
 }
 
 const mapStateToProps= state =>{

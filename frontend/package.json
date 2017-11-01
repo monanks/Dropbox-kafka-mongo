@@ -8,6 +8,7 @@
     "js-file-download": "^0.4.1",
     "material-ui": "^1.0.0-beta.16",
     "material-ui-icons": "^1.0.0-beta.15",
+    "moment": "^2.19.1",
     "muicss": "^0.9.27",
     "react": "^16.0.0",
     "react-bootstrap": "^0.31.3",

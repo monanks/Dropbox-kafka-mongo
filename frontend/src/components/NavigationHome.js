@@ -4,8 +4,8 @@ import {NavLink} from 'react-router-dom';
 class NavigationHome extends Component{
     render(){
         return(
-        <div className="row" style={nav}>
-            <div className="col-md-2">
+        <div className="row">
+            <div className="col-md-3">
             </div>
 
             <div className="col-md-9">
@@ -56,7 +56,4 @@ const logoStyle={
     width: "32px"
 }
 
-const nav={
-    backgroundColor: '#f7f9fa'
-}
 export default NavigationHome;

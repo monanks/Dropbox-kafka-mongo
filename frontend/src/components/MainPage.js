@@ -27,7 +27,7 @@ class MainPage extends Component{
 const navstyle={
     backgroundColor:'#f7f9fa',
     height:'100vh',
-    margin:'0px!important'
+    //margin:'0px!important'
 }
 
 export default MainPage;

@@ -16,6 +16,8 @@ import IconButton from 'material-ui/IconButton';
 import Tooltip from 'material-ui/Tooltip';
 import StarIcon from 'material-ui-icons/Star';
 import StarBorderIcon from 'material-ui-icons/StarBorder';
+import ShareIcon from 'material-ui-icons/Share'
+import moment from 'moment';
 
 var fileDownload = require('js-file-download');
 
@@ -108,9 +110,22 @@ class Files extends Component{
                                 </IconButton>
                                 </Tooltip>
                             </div>
-                            <div className="col-md-3">
+                            <div className="col-md-2">
                                 {/* {item.datetime} */}
-                                {item.datetime.substring(0,16)}
+                                <Tooltip id="tooltip-icon" title={item.datetime} placement="bottom">
+                                <p style={{fontWeight:'2px'}}>
+                                {moment(item.datetime,"YYYY-MM-DD HH:mm:ss").fromNow()}
+                                </p>
+                                </Tooltip>
+                            </div>
+                            <div className="col-md-1">
+                                <Tooltip id="tooltip-icon" title="Share" placement="bottom">
+                                <IconButton style={{margin:'-12px'}}>
+                                    <ShareIcon style={{width:'50%',height:'50%',color:'#637282'}} onClick={()=>{
+
+                                    }}/>
+                                </IconButton>
+                                </Tooltip>
                             </div>
                             <div className="col-md-2">
                                 
@@ -287,7 +302,7 @@ class Files extends Component{
     render(){
 
         //style={{overflow:'scroll',overFlowY:'hidden!important',overFlowX:'hidden!important',position:'relative',maxHeight:'560px'}}
-        if(this.props.file.list.length===0){
+        if(this.props.file.list.length===0 && this.props.afterAuth.curdir==='0'){
             return (
                 <div className="row" style={{fontSize:'18px',marginLeft:'0px',marginTop:'20px',height:'100%',width:'100%',textAlign:'center'}}>
                     Nothing To Show. Upload Some Files.
@@ -298,7 +313,7 @@ class Files extends Component{
         return(
             <div className="row" >
                 <List  >
-                    <ListItem >
+                    <ListItem style={{marginLeft:'20px',marginRight:'20px'}} >
                         <div className="row" style={hstyle}>
                             <div className="col-md-1">
                             </div>

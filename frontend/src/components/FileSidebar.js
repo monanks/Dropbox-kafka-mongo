@@ -56,7 +56,7 @@ class FileSidebar extends Component{
 
                 </div>
                 <div className="row">
-                <Button style={{color:'#0070e0',backgroundColor:'white'}} onClick={()=>{
+                <Button style={{color:'#0070e0',backgroundColor:'white',marginLeft:'-20px'}} onClick={()=>{
                     this.props.createFolder();
                 }}>
                     <FolderIcon style={{marginRight:'10px'}}/> New Folder
@@ -79,7 +79,9 @@ const cfu={
     width:'100%',
     height:'100%',
     fontColor:'white',
-    textAlign:'center'
+    textAlign:'center',
+    color:'white',
+    marginLeft:'-20px'
 }
 
 const mapStateToProps= state =>{

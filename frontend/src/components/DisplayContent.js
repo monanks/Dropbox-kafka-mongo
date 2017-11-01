@@ -6,6 +6,8 @@ import List, { ListItem } from 'material-ui/List';
 import FileIcon from 'material-ui-icons/InsertDriveFile';
 import FolderIcon from 'material-ui-icons/Folder';
 import Divider from 'material-ui/Divider';
+import moment from 'moment';
+import Tooltip from 'material-ui/Tooltip';
 
 class DisplayContent extends Component{
 
@@ -27,7 +29,7 @@ class DisplayContent extends Component{
 
                 }
             });
-    };
+    }
 
     listActivity = () => {
         if(this.props.activity.list!==undefined){
@@ -36,7 +38,7 @@ class DisplayContent extends Component{
              return var1.map((item)=>{
                 return (
                 <div>
-                <ListItem disabled={false} style={{marginLeft:'0px',marginRight:'0px'}} id={item.datetime}  onMouseOver={()=>{
+                <ListItem disabled={false} style={{marginLeft:'0px',marginRight:'20px'}} id={item.datetime}  onMouseOver={()=>{
                     document.getElementById(item.datetime).style.background = "#ebf4fd";
                 }}
                 onMouseOut={()=>{
@@ -52,11 +54,15 @@ class DisplayContent extends Component{
                         <div className="col-md-4">
                         {item.name}
                         </div>
-                        <div className="col-md-4">
+                        <div className="col-md-5">
                         {item.task}
                         </div>
-                        <div className="col-md-3" style={{textAlign:'right'}}>
-                        {item.datetime}
+                        <div className="col-md-2" style={{textAlign:'right'}}>
+                        <Tooltip id="tooltip-icon" title={item.datetime} placement="left" style={{}}>
+                            <p style={{fontWeight:'2px'}}>
+                                {moment(item.datetime,"YYYY-MM-DD HH:mm:ss").fromNow()}
+                            </p>
+                        </Tooltip>
                         </div>
                     </div>
                 </ListItem>
@@ -68,9 +74,9 @@ class DisplayContent extends Component{
     }
 
     render(){
-        if(this.props.activity.list.length===0){
+        if(this.props.activity.list==='undefined' || this.props.activity.list.length===0){
             return (
-                <div className="row" style={{fontSize:'18px',marginLeft:'0px',marginTop:'20px'}}>
+                <div className="row" style={{color:'#637282',fontSize:'12px',marginLeft:'0px',marginTop:'20px'}}>
                     No Recent Activity
                 </div>
             );
@@ -79,7 +85,7 @@ class DisplayContent extends Component{
             return (
                 
                 <div>
-                    <div className="row" style={{fontSize:'18px',marginLeft:'0px',marginTop:'20px'}}>
+                    <div className="row" style={{color:'#637282',fontSize:'12px',marginLeft:'0px',marginTop:'20px'}}>
                         Recent Activity
                     </div>
     
@@ -94,6 +100,8 @@ class DisplayContent extends Component{
         } 
     }
 }
+
+
 
 const lstyle = {
     width: "100%",

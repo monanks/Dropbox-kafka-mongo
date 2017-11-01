@@ -1,11 +1,18 @@
 import React,{Component} from 'react';
 import {NavLink} from 'react-router-dom';
+import BackIcon from 'material-ui-icons/NavigateBefore';
 
 class NavigationFile extends Component{
     render(){
         return(
-        <div style={nav}>
-            <div className="col-md-2">
+        <div className="row">
+            <div className="col-md-3">
+            <div className="row" style={istyle}>
+                    <NavLink to="/" style={hlstyle} activeStyle={{ color: '#99c6f3' }}>
+                    <BackIcon id="icon" style={backStyle} />
+                    </NavLink>
+                    
+                </div>
             </div>
 
             <div className="col-md-9">
@@ -50,7 +57,10 @@ const hlstyle={
     color: 'blue',
     display: 'block',
     msFlex: '1',
-    textDecoration: 'none'
+    textDecoration: 'none',
+    marginLeft:'0px',
+    marginRight:'-10px',
+    
 }
 const hlinkStyle={
     marginTop: "25px",
@@ -73,10 +83,15 @@ const linkStyle={
 
 const logoStyle={
     height: "32px",
-    width: "32px"
+    width: "32px",
+    
 }
 
-const nav={
-    backgroundColor: '#f7f9fa'
+const backStyle={
+    height: "24px",
+    width: "24px",
+    marginLeft:'35px',
+    marginTop:'6px'
 }
+
 export default NavigationFile;
