@@ -74,7 +74,13 @@ class DisplayContent extends Component{
     }
 
     render(){
-        if(this.props.activity.list==='undefined' || this.props.activity.list.length===0){
+        if(this.props.activity.list===undefined){
+            return (
+                <div className="row" style={{color:'#637282',fontSize:'12px',marginLeft:'0px',marginTop:'20px'}}>
+                    No Recent Activity
+                </div>
+            );
+        }else if((this.props.activity.list) && this.props.activity.list.length===0){
             return (
                 <div className="row" style={{color:'#637282',fontSize:'12px',marginLeft:'0px',marginTop:'20px'}}>
                     No Recent Activity

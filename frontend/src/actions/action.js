@@ -10,8 +10,17 @@ export const RESET_STATE = 'RESET_STATE';
 export const CREATE_FOLDER = 'CREATE_FOLDER';
 export const CLOSE_FOLDER = 'CLOSE_FOLDER';
 export const CHANGE_CURDIR = 'CHANGE_CURDIR';
+export const CHANGE_SHARED_CURDIR = 'CHANGE_SHARED_CURDIR';
 export const CHANGE_USER_STATE = 'CHANGE_USER_STATE';
 export const ADD_ACTIVITY_LIST = 'ADD_ACTIVITY_LIST';
+export const ADD_SHARED_INFO = 'ADD_SHARED_INFO';
+export const ADD_SHARED_FILE_LIST = "ADD_SHARED_FILE_LIST";
+
+export function addSharedInfo(){
+    return{
+        type: ADD_SHARED_INFO,
+    }
+}
 
 export function addActivityList(activitylist){
     return{
@@ -31,6 +40,14 @@ export function changeUserState(pending,logged){
 export function changeCurdir(dir,curdir){
     return{
         type: CHANGE_CURDIR,
+        dir,
+        curdir 
+    }
+}
+
+export function changeSharedCurdir(dir,curdir){
+    return{
+        type: CHANGE_SHARED_CURDIR,
         dir,
         curdir 
     }
@@ -101,6 +118,13 @@ export function removeUserInfo(){
 export function addFileList(filelist){
     return{
         type: ADD_FILE_LIST,
+        filelist
+    }
+}
+
+export function addSharedFileList(filelist){
+    return{
+        type: ADD_SHARED_FILE_LIST,
         filelist
     }
 }

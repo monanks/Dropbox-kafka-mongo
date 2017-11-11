@@ -13,7 +13,9 @@ import {
     CLOSE_FOLDER,
     CHANGE_CURDIR,
     CHANGE_USER_STATE,
-    ADD_ACTIVITY_LIST
+    ADD_ACTIVITY_LIST,
+    ADD_SHARED_FILE_LIST,
+    CHANGE_SHARED_CURDIR
 } from '../actions/action';
 
 function login(state={},action){
@@ -88,8 +90,12 @@ function afterAuth(state={name:"",isLoggedin:false},action){
 function file(state={},action){
     switch(action.type){
         case ADD_FILE_LIST:
-            return{
+            return{...state,
                 list: action.filelist
+            }
+        case ADD_SHARED_FILE_LIST:
+            return{...state,
+                sharedlist: action.filelist
             }
         case 'persist/REHYDRATE':
             var incoming = action.payload.file;
@@ -137,6 +143,22 @@ function userstate(state={},action){
             return state;
     }
 }
+
+function shared(state={curdir:'0',parentdir:'-1'},action){
+    switch(action.type){
+        case CHANGE_SHARED_CURDIR:
+            return {...state,
+                curdir: action.dir,
+                parentdir: action.curdir
+            }
+        case 'persist/REHYDRATE':
+            var incoming = action.payload.afterAuth;
+            if(incoming) return incoming;
+            return state;
+        default:
+            return state;
+    }
+}
 const GreatReducer =  combineReducers({
     login,
     register,
@@ -144,7 +166,8 @@ const GreatReducer =  combineReducers({
     file,
     folderstate,
     userstate,
-    activity    
+    activity,
+    shared    
 });        
 
 const wholeReducer = composeResetReducer(GreatReducer,{});

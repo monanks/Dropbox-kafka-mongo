@@ -19,6 +19,9 @@ function ConnectionProvider() {
             this.client = new kafka.Client("localhost:2181");
             var HighLevelProducer = kafka.HighLevelProducer;
             this.kafkaProducerConnection = new HighLevelProducer(this.client);
+            // this.kafkaProducerConnection.createTopics(['response_topic'], false, function (err, data) {
+            //     console.log(data);
+            // });
             //this.kafkaConnection = new kafka.Producer(this.client);
             console.log('producer ready');
         }

@@ -18,7 +18,7 @@ class NavigationHome extends Component{
                 </div>
 
                 <div className="row" style ={linkStyle}>
-                    <NavLink to="/files" style={lstyle} activeStyle={{ color: '#0070E0' }}>Files</NavLink>
+                    <NavLink to="/files/myfiles" style={lstyle} activeStyle={{ color: '#0070E0' }}>Files</NavLink>
                 </div>
 
                 <div className="row" style ={linkStyle}>

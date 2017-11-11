@@ -15,16 +15,20 @@ import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
 import Tooltip from 'material-ui/Tooltip';
 import StarIcon from 'material-ui-icons/Star';
+import LinkIcon from 'material-ui-icons/Link';
 import StarBorderIcon from 'material-ui-icons/StarBorder';
 import ShareIcon from 'material-ui-icons/Share'
 import moment from 'moment';
+import Modal from 'react-modal';
+import Button from 'material-ui/Button';
+import Snackbar from 'material-ui/Snackbar';
 
 var fileDownload = require('js-file-download');
 
 //import IconButton from 'material-ui/IconButton';
 class Files extends Component{
 
-    state = {};
+    state = {modalIsOpen: false,open:false,msg:''};
 
     componentWillMount(){
         this.props.changeCurdir('0','-1');
@@ -105,8 +109,8 @@ class Files extends Component{
                             <div className="col-md-1">
                                 <Tooltip id="tooltip-icon" title={(item.star==='1'?"Unstar":"Star")} placement="bottom">
                                 <IconButton style={{margin:'-12px'}}>
-                                    {(item.star==='1')?<StarIcon style={{color:'#4994dd'}} onClick={()=>{this.setStar(item.fileid,'0')}}/>
-                                    :<StarBorderIcon style={{color:'#4994dd'}} onClick={()=>{this.setStar(item.fileid,'1')}}/>}
+                                    {(item.star==='1')?<StarIcon style={{color:'#4994dd',width:'40%',height:'40%'}} onClick={()=>{this.setStar(item.fileid,'0')}}/>
+                                    :<StarBorderIcon style={{color:'#4994dd',width:'40%',height:'40%'}} onClick={()=>{this.setStar(item.fileid,'1')}}/>}
                                 </IconButton>
                                 </Tooltip>
                             </div>
@@ -122,7 +126,8 @@ class Files extends Component{
                                 <Tooltip id="tooltip-icon" title="Share" placement="bottom">
                                 <IconButton style={{margin:'-12px'}}>
                                     <ShareIcon style={{width:'50%',height:'50%',color:'#637282'}} onClick={()=>{
-
+                                        this.setState({...this.state,modalIsOpen:true,item:item});
+                                        console.log(this.state);
                                     }}/>
                                 </IconButton>
                                 </Tooltip>
@@ -298,14 +303,38 @@ class Files extends Component{
         </div>   
         )
     }
+
+    afterOpenModal() {
+        //this.subtitle.style.color = '#f00';
+    }
+
+    handleRequestClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
     
+        this.setState({...this.state, open: false });
+    };
+
     render(){
 
         //style={{overflow:'scroll',overFlowY:'hidden!important',overFlowX:'hidden!important',position:'relative',maxHeight:'560px'}}
-        if(this.props.file.list.length===0 && this.props.afterAuth.curdir==='0'){
+        if(this.props.file.list===undefined || (this.props.file.list.length===0 && this.props.afterAuth.curdir==='0')){
             return (
+                <div>
                 <div className="row" style={{fontSize:'18px',marginLeft:'0px',marginTop:'20px',height:'100%',width:'100%',textAlign:'center'}}>
                     Nothing To Show. Upload Some Files.
+                </div>
+                {this.props.folderstate ? this.newFolder():<div></div>}
+                </div>
+            );
+        }else if((this.props.file.list) && this.props.file.list.length===0){
+            return (
+                <div>
+                <div className="row" style={{fontSize:'18px',marginLeft:'0px',marginTop:'20px',height:'100%',width:'100%',textAlign:'center'}}>
+                    Nothing To Show. Upload Some Files.
+                </div>
+                {this.props.folderstate ? this.newFolder():<div></div>}
                 </div>
             );
         }
@@ -340,11 +369,106 @@ class Files extends Component{
                     {this.props.folderstate ? this.newFolder():<div></div>}
                     {this.addFiles()}
                 </List>
-                
+                <Modal
+                isOpen={this.state.modalIsOpen}
+                onAfterOpen={this.afterOpenModal}
+                style={customStyles}
+                shouldCloseOnOverlayClick={true}
+                contentLabel="Share"
+                >   
+                    {(this.state.modalIsOpen)?
+                        <div>
+                            <div className="row" style={{marginTop:'0px'}}>
+                                <div className="col-md-2">
+                                {(this.state.item.filetype==='0')?<FileIcon style={{width:'50%',height:'50%',color:'#6c7a89',marginTop:'-5px'}}/>:<FolderIcon style={{width:'60%',height:'60%',color:'#92ceff',marginTop:'-5px'}}/>}
+                                </div>
+                                <div className="col-md-10">
+                                {this.state.item.filename}
+                                </div>     
+                            </div>
+                            <div className="row" style={{marginTop:'5px'}}>
+                            <Divider inset style={{marginLeft:'0px',marginRight:'0px'}}/>
+                            </div>
+                            <div className="row" style={{marginTop:'10px'}}>
+                                <div className="col-md-2">
+                                <LinkIcon style={{width:'50%',height:'50%',color:'#6c7a89',margin:'5px'}}/>
+                                </div>
+                                <div className="col-md-10">
+                                <TextField id="emailshare" placeholder="Email" underlinestyle={{display: 'none'}}/>
+                                </div>     
+                            </div>
+                            <div className="row" style={{marginTop:'5px'}}>
+                            <Divider inset style={{marginLeft:'0px',marginRight:'0px'}}/>
+                            </div>
+
+                            <div className="row" style={{position:'fixed',bottom:'0',marginBottom:'7px'}}>
+                                <Divider inset style={{marginLeft:'0px',marginRight:'0px',marginBottom:'7px',width:'500px'}}/>
+                                <Button style={{align:'left'}} onClick={()=>{this.setState({...this.state,modalIsOpen: false});}}>Close</Button>
+                                <Button style={{align:'right'}} onClick={()=>{
+                                        var emailshare = document.getElementById('emailshare').value;
+                                        if(!validateEmail(emailshare)){
+                                            this.setState({...this.state, open: true,msg:'ENTER VALID EMAILID' });
+                                        }
+                                        else{
+                                            var payload = {
+                                                emailshare: emailshare,
+                                                fileid: this.state.item.fileid,
+                                                userid: this.props.afterAuth.userid,
+                                                filetype: this.state.item.filetype,
+                                                filename: this.state.item.filename,
+                                                filepath: this.state.item.path
+                                            }; 
+                                            API.shareFile(payload)
+                                            .then((data)=>{
+                                                console.log('helllllo'+data.status);
+                                                this.setState({...this.state,modalIsOpen: false,open:true,msg:data.message});
+                                            
+                                            });
+                                        }
+                                    }
+                                }>Share</Button>
+                            </div>
+                        </div>
+                        :<div></div>
+                    }
+                    
+                </Modal>
+                <Snackbar
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'right',
+                        }}
+                        open={this.state.open}
+                        autoHideDuration={4000}
+                        onRequestClose={this.handleRequestClose}
+                        SnackbarContentProps={{
+                            'aria-describedby': 'message-id',
+                        }}
+                        message={<span style={{textSize:'20px'}} id="message-id">{this.state.msg}</span>}
+                />
             </div>
         )
     }
 }
+
+function validateEmail(email) {
+    var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+}
+
+const customStyles = {
+    content : {
+      top                   : '40%',
+      left                  : '50%',
+      right                 : 'auto',
+      bottom                : 'auto',
+      marginRight           : '-50%',
+      transform             : 'translate(-50%, -50%)',
+      height                : '400px',
+      width                 : '500px',
+      borderRadius          : '5px'
+    }
+};
 
 const hstyle = {
     width: "100%",

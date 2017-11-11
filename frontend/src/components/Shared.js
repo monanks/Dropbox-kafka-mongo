@@ -1,22 +1,20 @@
 import React, {Component} from'react';
 import Header from './Header';
-import PageContent from './PageContent';
-import NavigationHome from './NavigationHome';
-
-class MainPage extends Component{
+import SharedContent from './SharedContent';
+import NavigationFile from './NavigationFile';
+class Shared extends Component{
     render(){
         return(
             <div className="row ">
                 <div className="col-md-2" style={navstyle}>
-                    <NavigationHome/>
+                    <NavigationFile/>
                 </div>
                 <div className="col-md-10">
-                    
                         <div className="row">
-                            <Header title="Home"/>
+                            <Header title="Sharing"/>
                         </div>
                         <div className="row">
-                            <PageContent/>
+                            <SharedContent/>
                         </div>
                 </div>
             </div>
@@ -25,11 +23,8 @@ class MainPage extends Component{
 }
 
 const navstyle={
-    //backgroundColor:'red',
     backgroundColor:'#f7f9fa',
-    height:'100vh',
-    //overflow:'hidden'
-    //margin:'0px!important'
+    height:'100vh'
 }
 
-export default MainPage;
+export default Shared;

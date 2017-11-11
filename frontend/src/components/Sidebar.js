@@ -90,7 +90,8 @@ const cfu={
     height:'100%',
     color:'white',
     textAlign:'center',
-    marginLeft:'-20px'
+    marginLeft:'-20px',
+    borderRadius:'5px'
 }
 
 const mapStateToProps= state =>{

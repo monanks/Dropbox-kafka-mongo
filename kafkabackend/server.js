@@ -9,6 +9,9 @@ var createFolder = require('./services/createFolder');
 var getParent = require('./services/getParent');
 var setStar = require('./services/setStar');
 var listactivity = require('./services/listactivity');
+var share = require('./services/share');
+var sharedlist = require('./services/sharedlist')
+
 
 var producer = connection.getProducer();
 
@@ -249,12 +252,64 @@ consumer8.on('message', function (message) {
 var topic_name9 = 'listactivity_topic';
 var consumer9 = connection.getConsumer(topic_name9);
 
-console.log('server8 is running');
+console.log('server9 is running');
 consumer9.on('message', function (message) {
     console.log('\nmessage received at '+topic_name9);
     //console.log(JSON.stringify(message.value));
     var data = JSON.parse(message.value);
     listactivity.handle_request(data.data, function(err,res){
+        console.log('after handle'+res);
+        var payloads = [
+            { topic: data.replyTo,
+                messages:JSON.stringify({
+                    correlationId:data.correlationId,
+                    data : res
+                }),
+                partition : 0
+            }
+        ];
+        producer.send(payloads, function(err, data){
+            console.log(data);
+        });
+        return;
+    });
+});
+
+var topic_name10 = 'share_topic';
+var consumer10 = connection.getConsumer(topic_name10);
+
+console.log('server10 is running');
+consumer10.on('message', function (message) {
+    console.log('\nmessage received at '+topic_name10);
+    //console.log(JSON.stringify(message.value));
+    var data = JSON.parse(message.value);
+    share.handle_request(data.data, function(err,res){
+        console.log('after handle'+res);
+        var payloads = [
+            { topic: data.replyTo,
+                messages:JSON.stringify({
+                    correlationId:data.correlationId,
+                    data : res
+                }),
+                partition : 0
+            }
+        ];
+        producer.send(payloads, function(err, data){
+            console.log(data);
+        });
+        return;
+    });
+});
+
+var topic_name11 = 'shared_list_topic';
+var consumer11 = connection.getConsumer(topic_name11);
+
+console.log('server11 is running');
+consumer11.on('message', function (message) {
+    console.log('\nmessage received at '+topic_name11);
+    //console.log(JSON.stringify(message.value));
+    var data = JSON.parse(message.value);
+    sharedlist.handle_request(data.data, function(err,res){
         console.log('after handle'+res);
         var payloads = [
             { topic: data.replyTo,

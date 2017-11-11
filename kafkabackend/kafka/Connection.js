@@ -20,6 +20,9 @@ function ConnectionProvider() {
             var HighLevelProducer = kafka.HighLevelProducer;
             this.kafkaProducerConnection = new HighLevelProducer(this.client);
             //this.kafkaConnection = new kafka.Producer(this.client);
+            // this.kafkaProducerConnection.createTopics(['signin_topic','signup_topic','upload_topic','list_topic','download_topic','delete_topic','new_folder_topic','getparent_topic','setstar_topic','listactivity_topic'], false, function (err, data) {
+            //     console.log(data);
+            // });
             console.log('producer ready');
         }
         return this.kafkaProducerConnection;

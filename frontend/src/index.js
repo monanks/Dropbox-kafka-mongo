@@ -13,6 +13,7 @@ import MainPage from './components/MainPage';
 import FilePage from './components/FilePage';
 import GroupPage from './components/GroupPage';
 import Account from './components/Account';
+import Shared from './components/Shared';
 import AuthorizedRoute from './components/AuthorizedRoute';
 import UnAuthorizedRoute from './components/UnAuthorizedRoute';
 import Hello from './components/Hello';
@@ -43,9 +44,10 @@ persistStore(store,{}, ()=>{
                         <UnAuthorizedRoute exact path="/login" component={LoginRegister}/>
                         <AuthorizedRoute exact path="/" component={MainPage}/>
                         <AuthorizedRoute exact path="/hello" component={Hello}/>
-                        <AuthorizedRoute exact path="/files" component={FilePage}/>
+                        <AuthorizedRoute exact path="/files/myfiles" component={FilePage}/>
                         <AuthorizedRoute exact path="/groups" component={GroupPage}/>
                         <AuthorizedRoute exact path="/account" component={Account}/>
+                        <AuthorizedRoute exact path="/files/shared" component={Shared}/>
                     </Switch>
                 </BrowserRouter>
             </MuiThemeProvider>

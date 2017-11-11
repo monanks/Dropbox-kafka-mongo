@@ -58,7 +58,7 @@ function handle_request(msg, callback){
 
                         coll1.insertOne(act,function(err,file){
                             if(err) throw err;
-                                var res = {
+                            var res = {
                                 status: '201',
                                 message: 'FILE UPLOADED SUCCESSFULLY'
                             }

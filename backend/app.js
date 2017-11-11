@@ -279,4 +279,47 @@ app.post('/listactivity',function(req,res){
     });
 });
 
+app.post('/shareFile',function(req,res){
+
+    var payload = {
+        userid: req.body.userid,
+        fileid: req.body.fileid,
+        emailshare: req.body.emailshare,
+        filetype: req.body.filetype,
+        filename: req.body.filename,
+        filepath: req.body.filepath
+    };
+    console.log('.................');
+    console.log(payload);
+    console.log('.................');
+    kafka.make_request('share_topic',payload,function(err,data){
+        console.log(data);
+        if(err){
+            res.json(err);
+        }
+        else{
+            res.json(data);
+        }
+    });
+});
+
+app.post('/getSharedFiles',function(req,res){
+
+    var payload = {
+        userid: req.body.userid,
+        curdir: req.body.curdir
+    };
+    console.log(payload);
+
+    kafka.make_request('shared_list_topic',payload,function(err,data){
+        console.log(data.status);
+        if(err){
+            res.json(err);
+        }
+        else{
+            res.json(data);
+        }
+    });
+});
+
 module.exports = app;

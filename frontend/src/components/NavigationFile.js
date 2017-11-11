@@ -24,19 +24,19 @@ class NavigationFile extends Component{
                 </div>
 
                 <div className="row" style ={hlinkStyle}>
-                    <NavLink to="/files" style={hlstyle} activeStyle={{ color: '#0070E0' }}>Files</NavLink>
+                    <NavLink to="/files/myfiles" style={hlstyle} activeStyle={{color: '#0070E0'}}>Files</NavLink>
                 </div>
 
                 <div className="row" style ={linkStyle}>
-                    <NavLink to="/files" style={lstyle} activeStyle={{ color: '#0070E0', fontWeight: '100' }}>My Files</NavLink>
+                    <NavLink to="/files/myfiles" style={lstyle} activeStyle={astyle}>My Files</NavLink>
                 </div>
 
                 <div className="row" style ={linkStyle}>
-                    <NavLink to="/files/shared" style={lstyle} activeStyle={{ color: '#0070E0' }}>Sharing</NavLink>
+                    <NavLink to="/files/shared" style={lstyle} activeStyle={astyle}>Sharing</NavLink>
                 </div>
 
                 <div className="row" style ={linkStyle}>
-                    <NavLink to="/files/deleted" style={lstyle} activeStyle={{ color: '#0070E0' }}>Deleted Files</NavLink>
+                    <NavLink to="/files/deleted" style={lstyle} activeStyle={astyle}>Deleted Files</NavLink>
                 </div>
             </div>
             <div className="col-md-1">
@@ -64,7 +64,7 @@ const hlstyle={
 }
 const hlinkStyle={
     marginTop: "25px",
-    marginBottom: "30px"
+    marginBottom: "40px"
 }
 
 
@@ -77,8 +77,8 @@ const lstyle={
     textDecoration: 'none'
 }
 const linkStyle={
-    marginTop: "25px",
-    marginBottom: "25px"
+    marginTop: "20px",
+    marginBottom: "20px"
 }
 
 const logoStyle={
@@ -93,5 +93,7 @@ const backStyle={
     marginLeft:'35px',
     marginTop:'6px'
 }
+
+const astyle = { color: '#0070E0', fontWeight:'bold' };
 
 export default NavigationFile;

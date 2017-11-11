@@ -198,3 +198,36 @@ fetch(`${api}/listactivity`, {
         console.log(error);
         return error;
 });
+
+export const shareFile = (payload) =>
+fetch(`${api}/shareFile`, {
+    method: 'POST',
+    headers: {
+        ...headers,
+        'Content-Type': 'application/json'
+    },
+    credentials:'include',
+    body: JSON.stringify(payload)
+}).then(res => {
+    console.log(res);
+    return res.json();
+}).catch(error => {
+        console.log(error);
+        return error;
+});
+
+export const getSharedFiles = (payload) =>
+fetch(`${api}/getSharedFiles`, {
+    method: 'POST',
+    headers: {
+        ...headers,
+        'Content-Type': 'application/json'
+    },
+    credentials:'include',
+    body: JSON.stringify(payload)
+}).then(res => {
+    return res.json();
+}).catch(error => {
+        console.log("This is error");
+        return error;
+});
