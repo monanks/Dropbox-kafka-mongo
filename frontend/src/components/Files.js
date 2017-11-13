@@ -103,8 +103,8 @@ class Files extends Component{
                                     } 
                                 }}>
                                 {(item.filetype==='0')?
-                                item.filename:
-                                <a onHover>{item.filename}</a>}
+                                <h style={{overflow: 'hidden',textOverflow: 'ellipsis'}}>{item.filename}</h>:
+                                <a style={{overflow: 'hidden',textOverflow: 'ellipsis'}}>{item.filename}</a>}
                             </div>
                             <div className="col-md-1">
                                 <Tooltip id="tooltip-icon" title={(item.star==='1'?"Unstar":"Star")} placement="bottom">
